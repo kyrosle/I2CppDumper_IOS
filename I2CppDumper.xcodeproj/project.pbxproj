@@ -36,6 +36,71 @@
 		6B5B497C2EE966C8001C9752 /* fishhook.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B5B497B2EE966C8001C9752 /* fishhook.h */; };
 		6B5B497E2EE966C8001C9752 /* I2CppDumperDylib.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B5B497D2EE966C8001C9752 /* I2CppDumperDylib.h */; };
 		6B5B49802EE966C8001C9752 /* I2CppDumperDylib.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B5B497F2EE966C8001C9752 /* I2CppDumperDylib.m */; };
+		6B5B4AE22EE9841D001C9752 /* Il2cpp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6B5B4ADE2EE9841D001C9752 /* Il2cpp.cpp */; };
+		6B5B4AE32EE9841D001C9752 /* Dumper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6B5B4ADC2EE9841D001C9752 /* Dumper.cpp */; };
+		6B5B4AE42EE9841D001C9752 /* il2cpp-tabledefs.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B5B4ADF2EE9841D001C9752 /* il2cpp-tabledefs.h */; };
+		6B5B4AE52EE9841D001C9752 /* Dumper.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 6B5B4ADB2EE9841D001C9752 /* Dumper.hpp */; };
+		6B5B4AE62EE9841D001C9752 /* Il2cpp.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 6B5B4ADD2EE9841D001C9752 /* Il2cpp.hpp */; };
+		6B5B4AE72EE9841D001C9752 /* Util.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 6B5B4AE02EE9841D001C9752 /* Util.hpp */; };
+		6B5B4AE82EE9841D001C9752 /* config.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B5B4ADA2EE9841D001C9752 /* config.h */; };
+		6B5B4B262EE98428001C9752 /* SSZipArchive.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B5B4B202EE98428001C9752 /* SSZipArchive.m */; };
+		6B5B4B272EE98428001C9752 /* mz_os_posix.c in Sources */ = {isa = PBXBuildFile; fileRef = 6B5B4B082EE98428001C9752 /* mz_os_posix.c */; };
+		6B5B4B282EE98428001C9752 /* SCLAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B5B4AEE2EE98428001C9752 /* SCLAlertView.m */; };
+		6B5B4B292EE98428001C9752 /* mz_strm_split.c in Sources */ = {isa = PBXBuildFile; fileRef = 6B5B4B142EE98428001C9752 /* mz_strm_split.c */; };
+		6B5B4B2A2EE98428001C9752 /* mz_strm_os_posix.c in Sources */ = {isa = PBXBuildFile; fileRef = 6B5B4B102EE98428001C9752 /* mz_strm_os_posix.c */; };
+		6B5B4B2B2EE98428001C9752 /* SCLAlertViewResponder.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B5B4AF02EE98428001C9752 /* SCLAlertViewResponder.m */; };
+		6B5B4B2C2EE98428001C9752 /* mz_zip_rw.c in Sources */ = {isa = PBXBuildFile; fileRef = 6B5B4B1C2EE98428001C9752 /* mz_zip_rw.c */; };
+		6B5B4B2D2EE98428001C9752 /* mz_strm_pkcrypt.c in Sources */ = {isa = PBXBuildFile; fileRef = 6B5B4B122EE98428001C9752 /* mz_strm_pkcrypt.c */; };
+		6B5B4B2E2EE98428001C9752 /* mz_crypt_apple.c in Sources */ = {isa = PBXBuildFile; fileRef = 6B5B4B052EE98428001C9752 /* mz_crypt_apple.c */; };
+		6B5B4B2F2EE98428001C9752 /* SCLTimerDisplay.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B5B4AFB2EE98428001C9752 /* SCLTimerDisplay.m */; };
+		6B5B4B302EE98428001C9752 /* mz_strm_zlib.c in Sources */ = {isa = PBXBuildFile; fileRef = 6B5B4B182EE98428001C9752 /* mz_strm_zlib.c */; };
+		6B5B4B312EE98428001C9752 /* mz_compat.c in Sources */ = {isa = PBXBuildFile; fileRef = 6B5B4B022EE98428001C9752 /* mz_compat.c */; };
+		6B5B4B322EE98428001C9752 /* SCLButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B5B4AF42EE98428001C9752 /* SCLButton.m */; };
+		6B5B4B332EE98428001C9752 /* mz_strm.c in Sources */ = {isa = PBXBuildFile; fileRef = 6B5B4B0A2EE98428001C9752 /* mz_strm.c */; };
+		6B5B4B342EE98428001C9752 /* UIImage+ImageEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B5B4AFD2EE98428001C9752 /* UIImage+ImageEffects.m */; };
+		6B5B4B352EE98428001C9752 /* mz_crypt.c in Sources */ = {isa = PBXBuildFile; fileRef = 6B5B4B042EE98428001C9752 /* mz_crypt.c */; };
+		6B5B4B362EE98428001C9752 /* SCLSwitchView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B5B4AF72EE98428001C9752 /* SCLSwitchView.m */; };
+		6B5B4B372EE98428001C9752 /* SCLTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B5B4AF92EE98428001C9752 /* SCLTextView.m */; };
+		6B5B4B382EE98428001C9752 /* SCLAlertViewStyleKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B5B4AF22EE98428001C9752 /* SCLAlertViewStyleKit.m */; };
+		6B5B4B392EE98428001C9752 /* mz_os.c in Sources */ = {isa = PBXBuildFile; fileRef = 6B5B4B072EE98428001C9752 /* mz_os.c */; };
+		6B5B4B3A2EE98428001C9752 /* mz_strm_wzaes.c in Sources */ = {isa = PBXBuildFile; fileRef = 6B5B4B162EE98428001C9752 /* mz_strm_wzaes.c */; };
+		6B5B4B3B2EE98428001C9752 /* mz_zip.c in Sources */ = {isa = PBXBuildFile; fileRef = 6B5B4B1A2EE98428001C9752 /* mz_zip.c */; };
+		6B5B4B3C2EE98428001C9752 /* mz_strm_mem.c in Sources */ = {isa = PBXBuildFile; fileRef = 6B5B4B0E2EE98428001C9752 /* mz_strm_mem.c */; };
+		6B5B4B3D2EE98428001C9752 /* mz_strm_buf.c in Sources */ = {isa = PBXBuildFile; fileRef = 6B5B4B0C2EE98428001C9752 /* mz_strm_buf.c */; };
+		6B5B4B3E2EE98428001C9752 /* SCLMacros.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B5B4AF52EE98428001C9752 /* SCLMacros.h */; };
+		6B5B4B3F2EE98428001C9752 /* mz_crypt.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B5B4B032EE98428001C9752 /* mz_crypt.h */; };
+		6B5B4B402EE98428001C9752 /* mz_zip_rw.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B5B4B1B2EE98428001C9752 /* mz_zip_rw.h */; };
+		6B5B4B412EE98428001C9752 /* SCLTextView.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B5B4AF82EE98428001C9752 /* SCLTextView.h */; };
+		6B5B4B422EE98428001C9752 /* mz_strm.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B5B4B092EE98428001C9752 /* mz_strm.h */; };
+		6B5B4B432EE98428001C9752 /* SCLSwitchView.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B5B4AF62EE98428001C9752 /* SCLSwitchView.h */; };
+		6B5B4B442EE98428001C9752 /* mz.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B5B4B002EE98428001C9752 /* mz.h */; };
+		6B5B4B452EE98428001C9752 /* mz_strm_wzaes.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B5B4B152EE98428001C9752 /* mz_strm_wzaes.h */; };
+		6B5B4B462EE98428001C9752 /* mz_zip.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B5B4B192EE98428001C9752 /* mz_zip.h */; };
+		6B5B4B472EE98428001C9752 /* SSZipArchive.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B5B4B1F2EE98428001C9752 /* SSZipArchive.h */; };
+		6B5B4B482EE98428001C9752 /* mz_strm_os.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B5B4B0F2EE98428001C9752 /* mz_strm_os.h */; };
+		6B5B4B492EE98428001C9752 /* json.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 6B5B4AE92EE98428001C9752 /* json.hpp */; };
+		6B5B4B4A2EE98428001C9752 /* mz_strm_zlib.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B5B4B172EE98428001C9752 /* mz_strm_zlib.h */; };
+		6B5B4B4B2EE98428001C9752 /* mz_os.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B5B4B062EE98428001C9752 /* mz_os.h */; };
+		6B5B4B4C2EE98428001C9752 /* mz_compat.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B5B4B012EE98428001C9752 /* mz_compat.h */; };
+		6B5B4B4D2EE98428001C9752 /* types.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B5B4B242EE98428001C9752 /* types.h */; };
+		6B5B4B4E2EE98428001C9752 /* mz_strm_buf.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B5B4B0B2EE98428001C9752 /* mz_strm_buf.h */; };
+		6B5B4B4F2EE98428001C9752 /* mz_strm_pkcrypt.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B5B4B112EE98428001C9752 /* mz_strm_pkcrypt.h */; };
+		6B5B4B502EE98428001C9752 /* UIImage+ImageEffects.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B5B4AFC2EE98428001C9752 /* UIImage+ImageEffects.h */; };
+		6B5B4B512EE98428001C9752 /* SCLTimerDisplay.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B5B4AFA2EE98428001C9752 /* SCLTimerDisplay.h */; };
+		6B5B4B522EE98428001C9752 /* ZipArchive.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B5B4B222EE98428001C9752 /* ZipArchive.h */; };
+		6B5B4B532EE98428001C9752 /* SCLAlertViewResponder.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B5B4AEF2EE98428001C9752 /* SCLAlertViewResponder.h */; };
+		6B5B4B542EE98428001C9752 /* SCLAlertView.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B5B4AED2EE98428001C9752 /* SCLAlertView.h */; };
+		6B5B4B552EE98428001C9752 /* mz_strm_split.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B5B4B132EE98428001C9752 /* mz_strm_split.h */; };
+		6B5B4B562EE98428001C9752 /* SCLButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B5B4AF32EE98428001C9752 /* SCLButton.h */; };
+		6B5B4B572EE98428001C9752 /* mz_strm_mem.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B5B4B0D2EE98428001C9752 /* mz_strm_mem.h */; };
+		6B5B4B582EE98428001C9752 /* SSZipCommon.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B5B4B212EE98428001C9752 /* SSZipCommon.h */; };
+		6B5B4B592EE98428001C9752 /* SCLAlertViewStyleKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B5B4AF12EE98428001C9752 /* SCLAlertViewStyleKit.h */; };
+		6B5B4B5D2EE98438001C9752 /* I2CppDumperInit.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B5B4B5B2EE98438001C9752 /* I2CppDumperInit.m */; };
+		6B5B4B5E2EE98438001C9752 /* Il2CppDumpEntry.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6B5B4B5C2EE98438001C9752 /* Il2CppDumpEntry.mm */; };
+		6B5B4B5F2EE98438001C9752 /* I2CppDumperInit.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B5B4B5A2EE98438001C9752 /* I2CppDumperInit.h */; };
+		6B5B4B612EE98444001C9752 /* I2CppDumperDylib-Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = 6B5B4B602EE98444001C9752 /* I2CppDumperDylib-Prefix.pch */; };
+		6B5B4B682EE9849C001C9752 /* AlertUtils.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6B5B4B672EE9849C001C9752 /* AlertUtils.mm */; };
+		6B5B4B692EE9849C001C9752 /* AlertUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B5B4B662EE9849C001C9752 /* AlertUtils.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -96,6 +161,75 @@
 		6B5B497B2EE966C8001C9752 /* fishhook.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fishhook.h; sourceTree = "<group>"; };
 		6B5B497D2EE966C8001C9752 /* I2CppDumperDylib.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = I2CppDumperDylib.h; sourceTree = "<group>"; };
 		6B5B497F2EE966C8001C9752 /* I2CppDumperDylib.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = I2CppDumperDylib.m; sourceTree = "<group>"; };
+		6B5B4ADA2EE9841D001C9752 /* config.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; };
+		6B5B4ADB2EE9841D001C9752 /* Dumper.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Dumper.hpp; sourceTree = "<group>"; };
+		6B5B4ADC2EE9841D001C9752 /* Dumper.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Dumper.cpp; sourceTree = "<group>"; };
+		6B5B4ADD2EE9841D001C9752 /* Il2cpp.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Il2cpp.hpp; sourceTree = "<group>"; };
+		6B5B4ADE2EE9841D001C9752 /* Il2cpp.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Il2cpp.cpp; sourceTree = "<group>"; };
+		6B5B4ADF2EE9841D001C9752 /* il2cpp-tabledefs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "il2cpp-tabledefs.h"; sourceTree = "<group>"; };
+		6B5B4AE02EE9841D001C9752 /* Util.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Util.hpp; sourceTree = "<group>"; };
+		6B5B4AE92EE98428001C9752 /* json.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = json.hpp; sourceTree = "<group>"; };
+		6B5B4AEA2EE98428001C9752 /* LICENSE.MIT */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE.MIT; sourceTree = "<group>"; };
+		6B5B4AEC2EE98428001C9752 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		6B5B4AED2EE98428001C9752 /* SCLAlertView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SCLAlertView.h; sourceTree = "<group>"; };
+		6B5B4AEE2EE98428001C9752 /* SCLAlertView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SCLAlertView.m; sourceTree = "<group>"; };
+		6B5B4AEF2EE98428001C9752 /* SCLAlertViewResponder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SCLAlertViewResponder.h; sourceTree = "<group>"; };
+		6B5B4AF02EE98428001C9752 /* SCLAlertViewResponder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SCLAlertViewResponder.m; sourceTree = "<group>"; };
+		6B5B4AF12EE98428001C9752 /* SCLAlertViewStyleKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SCLAlertViewStyleKit.h; sourceTree = "<group>"; };
+		6B5B4AF22EE98428001C9752 /* SCLAlertViewStyleKit.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SCLAlertViewStyleKit.m; sourceTree = "<group>"; };
+		6B5B4AF32EE98428001C9752 /* SCLButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SCLButton.h; sourceTree = "<group>"; };
+		6B5B4AF42EE98428001C9752 /* SCLButton.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SCLButton.m; sourceTree = "<group>"; };
+		6B5B4AF52EE98428001C9752 /* SCLMacros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SCLMacros.h; sourceTree = "<group>"; };
+		6B5B4AF62EE98428001C9752 /* SCLSwitchView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SCLSwitchView.h; sourceTree = "<group>"; };
+		6B5B4AF72EE98428001C9752 /* SCLSwitchView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SCLSwitchView.m; sourceTree = "<group>"; };
+		6B5B4AF82EE98428001C9752 /* SCLTextView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SCLTextView.h; sourceTree = "<group>"; };
+		6B5B4AF92EE98428001C9752 /* SCLTextView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SCLTextView.m; sourceTree = "<group>"; };
+		6B5B4AFA2EE98428001C9752 /* SCLTimerDisplay.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SCLTimerDisplay.h; sourceTree = "<group>"; };
+		6B5B4AFB2EE98428001C9752 /* SCLTimerDisplay.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SCLTimerDisplay.m; sourceTree = "<group>"; };
+		6B5B4AFC2EE98428001C9752 /* UIImage+ImageEffects.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIImage+ImageEffects.h"; sourceTree = "<group>"; };
+		6B5B4AFD2EE98428001C9752 /* UIImage+ImageEffects.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ImageEffects.m"; sourceTree = "<group>"; };
+		6B5B4AFF2EE98428001C9752 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		6B5B4B002EE98428001C9752 /* mz.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mz.h; sourceTree = "<group>"; };
+		6B5B4B012EE98428001C9752 /* mz_compat.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mz_compat.h; sourceTree = "<group>"; };
+		6B5B4B022EE98428001C9752 /* mz_compat.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = mz_compat.c; sourceTree = "<group>"; };
+		6B5B4B032EE98428001C9752 /* mz_crypt.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mz_crypt.h; sourceTree = "<group>"; };
+		6B5B4B042EE98428001C9752 /* mz_crypt.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = mz_crypt.c; sourceTree = "<group>"; };
+		6B5B4B052EE98428001C9752 /* mz_crypt_apple.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = mz_crypt_apple.c; sourceTree = "<group>"; };
+		6B5B4B062EE98428001C9752 /* mz_os.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mz_os.h; sourceTree = "<group>"; };
+		6B5B4B072EE98428001C9752 /* mz_os.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = mz_os.c; sourceTree = "<group>"; };
+		6B5B4B082EE98428001C9752 /* mz_os_posix.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = mz_os_posix.c; sourceTree = "<group>"; };
+		6B5B4B092EE98428001C9752 /* mz_strm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mz_strm.h; sourceTree = "<group>"; };
+		6B5B4B0A2EE98428001C9752 /* mz_strm.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = mz_strm.c; sourceTree = "<group>"; };
+		6B5B4B0B2EE98428001C9752 /* mz_strm_buf.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mz_strm_buf.h; sourceTree = "<group>"; };
+		6B5B4B0C2EE98428001C9752 /* mz_strm_buf.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = mz_strm_buf.c; sourceTree = "<group>"; };
+		6B5B4B0D2EE98428001C9752 /* mz_strm_mem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mz_strm_mem.h; sourceTree = "<group>"; };
+		6B5B4B0E2EE98428001C9752 /* mz_strm_mem.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = mz_strm_mem.c; sourceTree = "<group>"; };
+		6B5B4B0F2EE98428001C9752 /* mz_strm_os.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mz_strm_os.h; sourceTree = "<group>"; };
+		6B5B4B102EE98428001C9752 /* mz_strm_os_posix.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = mz_strm_os_posix.c; sourceTree = "<group>"; };
+		6B5B4B112EE98428001C9752 /* mz_strm_pkcrypt.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mz_strm_pkcrypt.h; sourceTree = "<group>"; };
+		6B5B4B122EE98428001C9752 /* mz_strm_pkcrypt.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = mz_strm_pkcrypt.c; sourceTree = "<group>"; };
+		6B5B4B132EE98428001C9752 /* mz_strm_split.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mz_strm_split.h; sourceTree = "<group>"; };
+		6B5B4B142EE98428001C9752 /* mz_strm_split.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = mz_strm_split.c; sourceTree = "<group>"; };
+		6B5B4B152EE98428001C9752 /* mz_strm_wzaes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mz_strm_wzaes.h; sourceTree = "<group>"; };
+		6B5B4B162EE98428001C9752 /* mz_strm_wzaes.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = mz_strm_wzaes.c; sourceTree = "<group>"; };
+		6B5B4B172EE98428001C9752 /* mz_strm_zlib.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mz_strm_zlib.h; sourceTree = "<group>"; };
+		6B5B4B182EE98428001C9752 /* mz_strm_zlib.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = mz_strm_zlib.c; sourceTree = "<group>"; };
+		6B5B4B192EE98428001C9752 /* mz_zip.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mz_zip.h; sourceTree = "<group>"; };
+		6B5B4B1A2EE98428001C9752 /* mz_zip.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = mz_zip.c; sourceTree = "<group>"; };
+		6B5B4B1B2EE98428001C9752 /* mz_zip_rw.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mz_zip_rw.h; sourceTree = "<group>"; };
+		6B5B4B1C2EE98428001C9752 /* mz_zip_rw.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = mz_zip_rw.c; sourceTree = "<group>"; };
+		6B5B4B1E2EE98428001C9752 /* LICENSE.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
+		6B5B4B1F2EE98428001C9752 /* SSZipArchive.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SSZipArchive.h; sourceTree = "<group>"; };
+		6B5B4B202EE98428001C9752 /* SSZipArchive.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SSZipArchive.m; sourceTree = "<group>"; };
+		6B5B4B212EE98428001C9752 /* SSZipCommon.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SSZipCommon.h; sourceTree = "<group>"; };
+		6B5B4B222EE98428001C9752 /* ZipArchive.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZipArchive.h; sourceTree = "<group>"; };
+		6B5B4B242EE98428001C9752 /* types.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = types.h; sourceTree = "<group>"; };
+		6B5B4B5A2EE98438001C9752 /* I2CppDumperInit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = I2CppDumperInit.h; sourceTree = "<group>"; };
+		6B5B4B5B2EE98438001C9752 /* I2CppDumperInit.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = I2CppDumperInit.m; sourceTree = "<group>"; };
+		6B5B4B5C2EE98438001C9752 /* Il2CppDumpEntry.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = Il2CppDumpEntry.mm; sourceTree = "<group>"; };
+		6B5B4B602EE98444001C9752 /* I2CppDumperDylib-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "I2CppDumperDylib-Prefix.pch"; sourceTree = "<group>"; };
+		6B5B4B662EE9849C001C9752 /* AlertUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AlertUtils.h; sourceTree = "<group>"; };
+		6B5B4B672EE9849C001C9752 /* AlertUtils.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = AlertUtils.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -175,8 +309,15 @@
 		6B5B49442EE966C8001C9752 /* I2CppDumperDylib */ = {
 			isa = PBXGroup;
 			children = (
+				6B5B4B252EE98428001C9752 /* includes */,
+				6B5B4AE12EE9841D001C9752 /* Core */,
+				6B5B4B662EE9849C001C9752 /* AlertUtils.h */,
+				6B5B4B672EE9849C001C9752 /* AlertUtils.mm */,
 				6B5B497D2EE966C8001C9752 /* I2CppDumperDylib.h */,
 				6B5B497F2EE966C8001C9752 /* I2CppDumperDylib.m */,
+				6B5B4B5A2EE98438001C9752 /* I2CppDumperInit.h */,
+				6B5B4B5B2EE98438001C9752 /* I2CppDumperInit.m */,
+				6B5B4B5C2EE98438001C9752 /* Il2CppDumpEntry.mm */,
 				6B5B49452EE966C8001C9752 /* Logos */,
 				6B5B49492EE966C8001C9752 /* Config */,
 				6B5B49562EE966C8001C9752 /* Trace */,
@@ -184,6 +325,7 @@
 				6B5B49752EE966C8001C9752 /* AntiAntiDebug */,
 				6B5B49782EE966C8001C9752 /* fishhook */,
 				6B5B49732EE966C8001C9752 /* Supporting Files */,
+				6B5B4B602EE98444001C9752 /* I2CppDumperDylib-Prefix.pch */,
 			);
 			path = I2CppDumperDylib;
 			sourceTree = "<group>";
@@ -263,6 +405,115 @@
 			path = fishhook;
 			sourceTree = "<group>";
 		};
+		6B5B4AE12EE9841D001C9752 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				6B5B4ADA2EE9841D001C9752 /* config.h */,
+				6B5B4ADB2EE9841D001C9752 /* Dumper.hpp */,
+				6B5B4ADC2EE9841D001C9752 /* Dumper.cpp */,
+				6B5B4ADD2EE9841D001C9752 /* Il2cpp.hpp */,
+				6B5B4ADE2EE9841D001C9752 /* Il2cpp.cpp */,
+				6B5B4ADF2EE9841D001C9752 /* il2cpp-tabledefs.h */,
+				6B5B4AE02EE9841D001C9752 /* Util.hpp */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		6B5B4AEB2EE98428001C9752 /* nlohmann */ = {
+			isa = PBXGroup;
+			children = (
+				6B5B4AE92EE98428001C9752 /* json.hpp */,
+				6B5B4AEA2EE98428001C9752 /* LICENSE.MIT */,
+			);
+			path = nlohmann;
+			sourceTree = "<group>";
+		};
+		6B5B4AFE2EE98428001C9752 /* SCLAlertView */ = {
+			isa = PBXGroup;
+			children = (
+				6B5B4AEC2EE98428001C9752 /* LICENSE */,
+				6B5B4AED2EE98428001C9752 /* SCLAlertView.h */,
+				6B5B4AEE2EE98428001C9752 /* SCLAlertView.m */,
+				6B5B4AEF2EE98428001C9752 /* SCLAlertViewResponder.h */,
+				6B5B4AF02EE98428001C9752 /* SCLAlertViewResponder.m */,
+				6B5B4AF12EE98428001C9752 /* SCLAlertViewStyleKit.h */,
+				6B5B4AF22EE98428001C9752 /* SCLAlertViewStyleKit.m */,
+				6B5B4AF32EE98428001C9752 /* SCLButton.h */,
+				6B5B4AF42EE98428001C9752 /* SCLButton.m */,
+				6B5B4AF52EE98428001C9752 /* SCLMacros.h */,
+				6B5B4AF62EE98428001C9752 /* SCLSwitchView.h */,
+				6B5B4AF72EE98428001C9752 /* SCLSwitchView.m */,
+				6B5B4AF82EE98428001C9752 /* SCLTextView.h */,
+				6B5B4AF92EE98428001C9752 /* SCLTextView.m */,
+				6B5B4AFA2EE98428001C9752 /* SCLTimerDisplay.h */,
+				6B5B4AFB2EE98428001C9752 /* SCLTimerDisplay.m */,
+				6B5B4AFC2EE98428001C9752 /* UIImage+ImageEffects.h */,
+				6B5B4AFD2EE98428001C9752 /* UIImage+ImageEffects.m */,
+			);
+			path = SCLAlertView;
+			sourceTree = "<group>";
+		};
+		6B5B4B1D2EE98428001C9752 /* minizip */ = {
+			isa = PBXGroup;
+			children = (
+				6B5B4AFF2EE98428001C9752 /* LICENSE */,
+				6B5B4B002EE98428001C9752 /* mz.h */,
+				6B5B4B012EE98428001C9752 /* mz_compat.h */,
+				6B5B4B022EE98428001C9752 /* mz_compat.c */,
+				6B5B4B032EE98428001C9752 /* mz_crypt.h */,
+				6B5B4B042EE98428001C9752 /* mz_crypt.c */,
+				6B5B4B052EE98428001C9752 /* mz_crypt_apple.c */,
+				6B5B4B062EE98428001C9752 /* mz_os.h */,
+				6B5B4B072EE98428001C9752 /* mz_os.c */,
+				6B5B4B082EE98428001C9752 /* mz_os_posix.c */,
+				6B5B4B092EE98428001C9752 /* mz_strm.h */,
+				6B5B4B0A2EE98428001C9752 /* mz_strm.c */,
+				6B5B4B0B2EE98428001C9752 /* mz_strm_buf.h */,
+				6B5B4B0C2EE98428001C9752 /* mz_strm_buf.c */,
+				6B5B4B0D2EE98428001C9752 /* mz_strm_mem.h */,
+				6B5B4B0E2EE98428001C9752 /* mz_strm_mem.c */,
+				6B5B4B0F2EE98428001C9752 /* mz_strm_os.h */,
+				6B5B4B102EE98428001C9752 /* mz_strm_os_posix.c */,
+				6B5B4B112EE98428001C9752 /* mz_strm_pkcrypt.h */,
+				6B5B4B122EE98428001C9752 /* mz_strm_pkcrypt.c */,
+				6B5B4B132EE98428001C9752 /* mz_strm_split.h */,
+				6B5B4B142EE98428001C9752 /* mz_strm_split.c */,
+				6B5B4B152EE98428001C9752 /* mz_strm_wzaes.h */,
+				6B5B4B162EE98428001C9752 /* mz_strm_wzaes.c */,
+				6B5B4B172EE98428001C9752 /* mz_strm_zlib.h */,
+				6B5B4B182EE98428001C9752 /* mz_strm_zlib.c */,
+				6B5B4B192EE98428001C9752 /* mz_zip.h */,
+				6B5B4B1A2EE98428001C9752 /* mz_zip.c */,
+				6B5B4B1B2EE98428001C9752 /* mz_zip_rw.h */,
+				6B5B4B1C2EE98428001C9752 /* mz_zip_rw.c */,
+			);
+			path = minizip;
+			sourceTree = "<group>";
+		};
+		6B5B4B232EE98428001C9752 /* SSZipArchive */ = {
+			isa = PBXGroup;
+			children = (
+				6B5B4B1D2EE98428001C9752 /* minizip */,
+				6B5B4B1E2EE98428001C9752 /* LICENSE.txt */,
+				6B5B4B1F2EE98428001C9752 /* SSZipArchive.h */,
+				6B5B4B202EE98428001C9752 /* SSZipArchive.m */,
+				6B5B4B212EE98428001C9752 /* SSZipCommon.h */,
+				6B5B4B222EE98428001C9752 /* ZipArchive.h */,
+			);
+			path = SSZipArchive;
+			sourceTree = "<group>";
+		};
+		6B5B4B252EE98428001C9752 /* includes */ = {
+			isa = PBXGroup;
+			children = (
+				6B5B4AEB2EE98428001C9752 /* nlohmann */,
+				6B5B4AFE2EE98428001C9752 /* SCLAlertView */,
+				6B5B4B232EE98428001C9752 /* SSZipArchive */,
+				6B5B4B242EE98428001C9752 /* types.h */,
+			);
+			path = includes;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -270,9 +521,45 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6B5B4AE42EE9841D001C9752 /* il2cpp-tabledefs.h in Headers */,
+				6B5B4AE52EE9841D001C9752 /* Dumper.hpp in Headers */,
+				6B5B4AE62EE9841D001C9752 /* Il2cpp.hpp in Headers */,
+				6B5B4AE72EE9841D001C9752 /* Util.hpp in Headers */,
+				6B5B4B5F2EE98438001C9752 /* I2CppDumperInit.h in Headers */,
+				6B5B4AE82EE9841D001C9752 /* config.h in Headers */,
 				6B5B494F2EE966C8001C9752 /* MDCycriptManager.h in Headers */,
 				6B5B49532EE966C8001C9752 /* MDMethodTrace.h in Headers */,
 				6B5B497C2EE966C8001C9752 /* fishhook.h in Headers */,
+				6B5B4B3E2EE98428001C9752 /* SCLMacros.h in Headers */,
+				6B5B4B3F2EE98428001C9752 /* mz_crypt.h in Headers */,
+				6B5B4B402EE98428001C9752 /* mz_zip_rw.h in Headers */,
+				6B5B4B412EE98428001C9752 /* SCLTextView.h in Headers */,
+				6B5B4B422EE98428001C9752 /* mz_strm.h in Headers */,
+				6B5B4B432EE98428001C9752 /* SCLSwitchView.h in Headers */,
+				6B5B4B442EE98428001C9752 /* mz.h in Headers */,
+				6B5B4B452EE98428001C9752 /* mz_strm_wzaes.h in Headers */,
+				6B5B4B462EE98428001C9752 /* mz_zip.h in Headers */,
+				6B5B4B472EE98428001C9752 /* SSZipArchive.h in Headers */,
+				6B5B4B692EE9849C001C9752 /* AlertUtils.h in Headers */,
+				6B5B4B482EE98428001C9752 /* mz_strm_os.h in Headers */,
+				6B5B4B492EE98428001C9752 /* json.hpp in Headers */,
+				6B5B4B4A2EE98428001C9752 /* mz_strm_zlib.h in Headers */,
+				6B5B4B4B2EE98428001C9752 /* mz_os.h in Headers */,
+				6B5B4B4C2EE98428001C9752 /* mz_compat.h in Headers */,
+				6B5B4B4D2EE98428001C9752 /* types.h in Headers */,
+				6B5B4B4E2EE98428001C9752 /* mz_strm_buf.h in Headers */,
+				6B5B4B4F2EE98428001C9752 /* mz_strm_pkcrypt.h in Headers */,
+				6B5B4B502EE98428001C9752 /* UIImage+ImageEffects.h in Headers */,
+				6B5B4B612EE98444001C9752 /* I2CppDumperDylib-Prefix.pch in Headers */,
+				6B5B4B512EE98428001C9752 /* SCLTimerDisplay.h in Headers */,
+				6B5B4B522EE98428001C9752 /* ZipArchive.h in Headers */,
+				6B5B4B532EE98428001C9752 /* SCLAlertViewResponder.h in Headers */,
+				6B5B4B542EE98428001C9752 /* SCLAlertView.h in Headers */,
+				6B5B4B552EE98428001C9752 /* mz_strm_split.h in Headers */,
+				6B5B4B562EE98428001C9752 /* SCLButton.h in Headers */,
+				6B5B4B572EE98428001C9752 /* mz_strm_mem.h in Headers */,
+				6B5B4B582EE98428001C9752 /* SSZipCommon.h in Headers */,
+				6B5B4B592EE98428001C9752 /* SCLAlertViewStyleKit.h in Headers */,
 				6B5B49702EE966C8001C9752 /* LLDBTools.h in Headers */,
 				6B5B494B2EE966C8001C9752 /* MDConfigManager.h in Headers */,
 				6B5B496A2EE966C8001C9752 /* OCSelectorTrampolines.h in Headers */,
@@ -446,10 +733,39 @@
 				6B5B49802EE966C8001C9752 /* I2CppDumperDylib.m in Sources */,
 				6B5B49512EE966C8001C9752 /* MDCycriptManager.m in Sources */,
 				6B5B495A2EE966C8001C9752 /* a1a2-selectortramps-arm64.s in Sources */,
+				6B5B4B262EE98428001C9752 /* SSZipArchive.m in Sources */,
+				6B5B4B272EE98428001C9752 /* mz_os_posix.c in Sources */,
+				6B5B4B282EE98428001C9752 /* SCLAlertView.m in Sources */,
+				6B5B4B292EE98428001C9752 /* mz_strm_split.c in Sources */,
+				6B5B4B5D2EE98438001C9752 /* I2CppDumperInit.m in Sources */,
+				6B5B4B5E2EE98438001C9752 /* Il2CppDumpEntry.mm in Sources */,
+				6B5B4B2A2EE98428001C9752 /* mz_strm_os_posix.c in Sources */,
+				6B5B4B2B2EE98428001C9752 /* SCLAlertViewResponder.m in Sources */,
+				6B5B4B2C2EE98428001C9752 /* mz_zip_rw.c in Sources */,
+				6B5B4B2D2EE98428001C9752 /* mz_strm_pkcrypt.c in Sources */,
+				6B5B4B2E2EE98428001C9752 /* mz_crypt_apple.c in Sources */,
+				6B5B4B2F2EE98428001C9752 /* SCLTimerDisplay.m in Sources */,
+				6B5B4B302EE98428001C9752 /* mz_strm_zlib.c in Sources */,
+				6B5B4B312EE98428001C9752 /* mz_compat.c in Sources */,
+				6B5B4B322EE98428001C9752 /* SCLButton.m in Sources */,
+				6B5B4B332EE98428001C9752 /* mz_strm.c in Sources */,
+				6B5B4B342EE98428001C9752 /* UIImage+ImageEffects.m in Sources */,
+				6B5B4B352EE98428001C9752 /* mz_crypt.c in Sources */,
+				6B5B4B362EE98428001C9752 /* SCLSwitchView.m in Sources */,
+				6B5B4B372EE98428001C9752 /* SCLTextView.m in Sources */,
+				6B5B4B382EE98428001C9752 /* SCLAlertViewStyleKit.m in Sources */,
+				6B5B4B682EE9849C001C9752 /* AlertUtils.mm in Sources */,
+				6B5B4B392EE98428001C9752 /* mz_os.c in Sources */,
+				6B5B4B3A2EE98428001C9752 /* mz_strm_wzaes.c in Sources */,
+				6B5B4B3B2EE98428001C9752 /* mz_zip.c in Sources */,
+				6B5B4B3C2EE98428001C9752 /* mz_strm_mem.c in Sources */,
+				6B5B4B3D2EE98428001C9752 /* mz_strm_buf.c in Sources */,
 				6B5B49582EE966C8001C9752 /* a1a2-selectortramps-arm.s in Sources */,
 				6B5B495E2EE966C8001C9752 /* a1a2-selectortramps-x86_64.s in Sources */,
 				6B5B49682EE966C8001C9752 /* OCMethodTrace.m in Sources */,
 				6B5B494D2EE966C8001C9752 /* MDConfigManager.m in Sources */,
+				6B5B4AE22EE9841D001C9752 /* Il2cpp.cpp in Sources */,
+				6B5B4AE32EE9841D001C9752 /* Dumper.cpp in Sources */,
 				6B5B497A2EE966C8001C9752 /* fishhook.c in Sources */,
 				6B5B49772EE966C8001C9752 /* AntiAntiDebug.m in Sources */,
 				6B5B496C2EE966C8001C9752 /* OCSelectorTrampolines.mm in Sources */,
