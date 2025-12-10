@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		6B5B493A2EE966C8001C9752 /* libI2CppDumperDylib.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6B5B49392EE966C8001C9752 /* libI2CppDumperDylib.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		6B5B493A2EE966C8001C9752 /* libI2CppDumperDylib.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = 6B5B49392EE966C8001C9752 /* libI2CppDumperDylib.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		6B5B493F2EE966C8001C9752 /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B5B493E2EE966C8001C9752 /* JavaScriptCore.framework */; };
 		6B5B49412EE966C8001C9752 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B5B49402EE966C8001C9752 /* Foundation.framework */; };
 		6B5B49432EE966C8001C9752 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B5B49422EE966C8001C9752 /* UIKit.framework */; };
@@ -49,14 +49,15 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		6B5B49252EE966C8001C9752 /* CopyFiles */ = {
+		6B5B49252EE966C8001C9752 /* Copy Files */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				6B5B493A2EE966C8001C9752 /* libI2CppDumperDylib.dylib in CopyFiles */,
+				6B5B493A2EE966C8001C9752 /* libI2CppDumperDylib.dylib in Copy Files */,
 			);
+			name = "Copy Files";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -291,7 +292,7 @@
 				6B5B49222EE966C8001C9752 /* Frameworks */,
 				6B5B49232EE966C8001C9752 /* ShellScript */,
 				6B5B49242EE966C8001C9752 /* Resources */,
-				6B5B49252EE966C8001C9752 /* CopyFiles */,
+				6B5B49252EE966C8001C9752 /* Copy Files */,
 				6B5B49262EE966C8001C9752 /* ShellScript */,
 			);
 			buildRules = (
@@ -392,7 +393,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = /opt/MonkeyDev/Tools/pack.sh;
+			shellScript = "/opt/MonkeyDev/Tools/pack.sh\n";
 		};
 		6B5B49262EE966C8001C9752 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -409,7 +410,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "/opt/MonkeyDev/Tools/pack.sh codesign";
+			shellScript = "/opt/MonkeyDev/Tools/pack.sh codesign\n# 删除所有 Framework 和 PlugIn 中的 mobileprovision\nfind \"${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}\" -name \"embedded.mobileprovision\" -delete\n";
 		};
 		6B5B49342EE966C8001C9752 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -501,6 +502,7 @@
 					"$(MonkeyDevTheosPath)/vendor/include/**",
 				);
 				INSTALL_PATH = "@executable_path/Frameworks/libI2CppDumperDylib.dylib";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -518,10 +520,6 @@
 				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
-					"-weak_library",
-					"/usr/lib/libc++.dylib",
-					"-weak_library",
-					"/usr/lib/libstdc++.dylib",
 					"-weak_library",
 					"$(MonkeyDevPath)/Frameworks/libsubstrate.dylib",
 					"-lcycript",
@@ -562,6 +560,7 @@
 					"$(MonkeyDevTheosPath)/vendor/include/**",
 				);
 				INSTALL_PATH = "@executable_path/Frameworks/libI2CppDumperDylib.dylib";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -580,10 +579,6 @@
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-weak_library",
-					"/usr/lib/libc++.dylib",
-					"-weak_library",
-					"/usr/lib/libstdc++.dylib",
-					"-weak_library",
 					"$(MonkeyDevPath)/Frameworks/libsubstrate.dylib",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -598,7 +593,9 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 5PHBKYVNJ4;
 				ENABLE_BITCODE = NO;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				MARKETING_VERSION = 1.0;
 				MONKEYDEV_ADD_SUBSTRATE = YES;
 				MONKEYDEV_CLASS_DUMP = NO;
@@ -623,7 +620,9 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 5PHBKYVNJ4;
 				ENABLE_BITCODE = NO;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				MARKETING_VERSION = 1.0;
 				MONKEYDEV_ADD_SUBSTRATE = YES;
 				MONKEYDEV_CLASS_DUMP = NO;
