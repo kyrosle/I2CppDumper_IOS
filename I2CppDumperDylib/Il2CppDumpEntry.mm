@@ -95,7 +95,7 @@ static void dump_thread(void) {
     });
 }
 
-void StartIl2CppDumpThread(void) {
+extern "C" void StartIl2CppDumpThread(void) {
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_async(queue, ^{
         NSLog(@"[I2CppDumper] ========= START DUMPER =========");
@@ -103,4 +103,3 @@ void StartIl2CppDumpThread(void) {
         NSLog(@"[I2CppDumper] ========= END DUMPER =========");
     });
 }
-
