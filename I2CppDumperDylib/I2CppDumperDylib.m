@@ -13,16 +13,12 @@
 #import <UIKit/UIKit.h>
 #import <Cycript/Cycript.h>
 #import <MDCycriptManager.h>
-#import "I2CppDumperInit.h"
 
 // Il2Cpp dumper entry (ported from IOS-Il2CppDumper)
 void StartIl2CppDumpThread(void);
 
 CHConstructor{
     printf(INSERT_SUCCESS_WELCOME);
-
-    NSLog(@"-------- Tweak Init");
-    I2CppDumperShowInjectedAlert();
 
     // Start Il2Cpp runtime dumper in background
     StartIl2CppDumpThread();
