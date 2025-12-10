@@ -833,6 +833,7 @@
 				OTHER_CFLAGS = (
 					"$(inherited)",
 					"-DTHEOS_INSTANCE_NAME=\"\\\"I2CppDumperDylib\\\"\"",
+					"-DHAVE_WZAES",
 				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -891,6 +892,7 @@
 				OTHER_CFLAGS = (
 					"$(inherited)",
 					"-DTHEOS_INSTANCE_NAME=\"\\\"I2CppDumperDylib\\\"\"",
+					"-DHAVE_WZAES",
 				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",

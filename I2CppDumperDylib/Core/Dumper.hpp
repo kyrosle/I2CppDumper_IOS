@@ -11,7 +11,7 @@
 #include "Il2cpp.hpp"
 #include "Util.hpp"
 #include "il2cpp-tabledefs.h"
-#include "../../includes/nlohmann/json.hpp"
+#include "../includes/nlohmann/json.hpp"
 #include "config.h"
 
 using json = nlohmann::json;

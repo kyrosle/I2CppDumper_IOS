@@ -1,5 +1,5 @@
 #pragma once
-#include <SCLAlertView/SCLAlertView.h>
+#import "includes/SCLAlertView/SCLAlertView.h"
 
 #define ___ALERT_TITLE "Dumper by batchh & tien0246"
 

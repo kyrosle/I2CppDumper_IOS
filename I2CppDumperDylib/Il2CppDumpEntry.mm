@@ -5,6 +5,7 @@
 
 #import <Foundation/Foundation.h>
 
+#import "includes/SSZipArchive/SSZipArchive.h"
 #import "AlertUtils.h"
 
 #include "Core/config.h"
