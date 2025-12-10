@@ -210,25 +210,10 @@ std::string Dumper::dumpField(void *klass) {
         std::string field_type_name = getClassName(field_class);
         outPut << field_type_name << " " << Variables::IL2CPP::il2cpp_field_get_name(field);
 
-        if (attrs & FIELD_ATTRIBUTE_LITERAL && is_enum) {
-            uint64_t val = 0;
-            Variables::IL2CPP::il2cpp_field_static_get_value(field, &val);
-            outPut << " = " << std::dec << val << ";\n";
-        } else if (attrs & FIELD_ATTRIBUTE_LITERAL) {
-            if (field_type_name == "String") {
-                void *val = nullptr;
-                Variables::IL2CPP::il2cpp_field_static_get_value(field, &val);
-                if (!val) {
-                    outPut << " = null;\n";
-                    continue;
-                }
-                uint16_t *chars = Variables::IL2CPP::il2cpp_string_chars(val);
-                outPut << " = \"" << uint16ToString(chars) << "\";\n";
-            } else {
-                uint64_t val = 0;
-                Variables::IL2CPP::il2cpp_field_static_get_value(field, &val);
-                outPut << " = " << std::dec << val << ";\n";
-            }
+        if (attrs & FIELD_ATTRIBUTE_LITERAL) {
+            // 读取常量值在某些游戏/Unity 版本上会触发崩溃（il2cpp_field_static_get_value 对应符号或调用约定不兼容）。
+            // 对于元数据分析来说，类型和名字更重要，这里仅标记为 literal，跳过实际取值。
+            outPut << " /* literal */;\n";
         } else {
             outPut << "; // 0x" << std::hex << std::uppercase << Variables::IL2CPP::il2cpp_field_get_offset(field) << "\n";
         }
@@ -487,4 +472,3 @@ void Dumper::GenScript::addMethod(uint64_t addr, std::string namespaze, std::str
                                         {"Name", fullName}});
     dataOffsets.insert(addr);
 }
-

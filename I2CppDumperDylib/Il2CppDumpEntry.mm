@@ -13,8 +13,6 @@
 #include "Core/Dumper.hpp"
 
 static void dump_thread(void) {
-    sleep(5);
-
     showInfo([NSString stringWithFormat:@"Dumping after %d seconds.", WAIT_TIME_SEC], WAIT_TIME_SEC / 2.0f);
 
     sleep(WAIT_TIME_SEC);
@@ -76,10 +74,10 @@ static void dump_thread(void) {
 
     Dumper::DumpStatus dumpStatus = Dumper::dump(dumpPath.UTF8String, headersDumpPath.UTF8String);
 
-    if ([fileManager fileExistsAtPath:dumpPath]) {
-        [SSZipArchive createZipFileAtPath:zipDumpPath withContentsOfDirectory:dumpPath];
-        [fileManager removeItemAtPath:dumpPath error:nil];
+    if ([fileManager fileExistsAtPath:zipDumpPath]) {
+        [fileManager removeItemAtPath:zipDumpPath error:nil];
     }
+    [SSZipArchive createZipFileAtPath:zipDumpPath withContentsOfDirectory:dumpPath];
 
     dismisWaiting(waitingAlert);
 
@@ -91,7 +89,7 @@ static void dump_thread(void) {
     NSLog(@"[I2CppDumper] Dump finished.");
 
     dispatch_async(dispatch_get_main_queue(), ^{
-        showSuccess([NSString stringWithFormat:@"Dump at: \n%@", zipDumpPath]);
+        showSuccess([NSString stringWithFormat:@"Dump at: \n%@\nFolder: %@", zipDumpPath, dumpPath]);
     });
 }
 
