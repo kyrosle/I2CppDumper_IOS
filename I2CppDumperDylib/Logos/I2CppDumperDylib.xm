@@ -1,60 +1,57 @@
-// See http://iphonedevwiki.net/index.php/Logos
-
 #import <UIKit/UIKit.h>
 
-@interface CustomViewController
+__attribute__((constructor))
+static void il2cppdumper_init() {
+    NSLog(@"[MDTest] constructor in, bundle = %@", [[NSBundle mainBundle] bundleIdentifier]);
 
-@property (nonatomic, copy) NSString* newProperty;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        // 稍微等一等，让 Unity / SDK 把根 VC 搞出来
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)),
+                       dispatch_get_main_queue(), ^{
 
-+ (void)classMethod;
+            UIWindow *targetWindow = nil;
 
-- (NSString*)getMyName;
+            // iOS 13+ UIScene 方式获取 window
+            if (@available(iOS 13.0, *)) {
+                for (UIScene *scene in [UIApplication sharedApplication].connectedScenes) {
+                    if (scene.activationState == UISceneActivationStateForegroundActive &&
+                        [scene isKindOfClass:[UIWindowScene class]]) {
 
-- (void)newMethod:(NSString*) output;
+                        UIWindowScene *ws = (UIWindowScene *)scene;
+                        for (UIWindow *w in ws.windows) {
+                            if (w.isKeyWindow) {
+                                targetWindow = w;
+                                break;
+                            }
+                        }
+                    }
+                    if (targetWindow) break;
+                }
+            }
 
-@end
+            // 旧系统兜底
+            if (!targetWindow) {
+                targetWindow = [UIApplication sharedApplication].keyWindow;
+            }
 
-%hook CustomViewController
+            if (!targetWindow) {
+                NSLog(@"[MDTest] 没找到 window，先只打 log，不弹窗");
+                return;
+            }
 
-+ (void)classMethod
-{
-	%log;
+            UIViewController *rootVC = targetWindow.rootViewController;
+            while (rootVC.presentedViewController) {
+                rootVC = rootVC.presentedViewController;
+            }
 
-	%orig;
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Il2cppDumper"
+                                                                           message:@"MonkeyDev 注入 & UI 测试 OK"
+                                                                    preferredStyle:UIAlertControllerStyleAlert];
+            [alert addAction:[UIAlertAction actionWithTitle:@"好"
+                                                      style:UIAlertActionStyleDefault
+                                                    handler:nil]];
+
+            [rootVC presentViewController:alert animated:YES completion:nil];
+        });
+    });
 }
-
-%new
--(void)newMethod:(NSString*) output{
-    NSLog(@"This is a new method : %@", output);
-}
-
-%new
-- (id)newProperty {
-    return objc_getAssociatedObject(self, @selector(newProperty));
-}
-
-%new
-- (void)setNewProperty:(id)value {
-    objc_setAssociatedObject(self, @selector(newProperty), value, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (NSString*)getMyName
-{
-	%log;
-    
-    NSString* password = MSHookIvar<NSString*>(self,"_password");
-    
-    NSLog(@"password:%@", password);
-    
-    [%c(CustomViewController) classMethod];
-    
-    [self newMethod:@"output"];
-    
-    self.newProperty = @"newProperty";
-    
-    NSLog(@"newProperty : %@", self.newProperty);
-
-	return %orig();
-}
-
-%end
