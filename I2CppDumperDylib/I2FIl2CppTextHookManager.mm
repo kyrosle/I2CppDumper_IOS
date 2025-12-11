@@ -6,10 +6,15 @@
 #import "I2FTextLogManager.h"
 #import "includes/Dobby/dobby.h"
 
+#include <unordered_set>
+
 typedef void (*I2FSetTextFn)(void *self, void *str);
 
 static NSMutableDictionary<NSNumber *, NSString *> *gAddressToRvaMap = nil;
+static NSMutableDictionary<NSNumber *, NSString *> *gAddressToNameMap = nil;
 static NSMutableArray<NSNumber *> *gInstalledAddresses = nil;
+static std::unordered_set<uint64_t> gValidMethodRvas;
+static BOOL gValidMethodRvasBuilt = NO;
 
 static NSString *I2FConvertIl2CppStringToNSString(void *il2cppString) {
     if (!il2cppString || !Variables::IL2CPP::il2cpp_string_chars) {
@@ -42,17 +47,21 @@ static void *I2FGetSecondArgument(DobbyRegisterContext *ctx) {
 
 static void I2FSetterPreHandler(void *address, DobbyRegisterContext *ctx) {
     @autoreleasepool {
+        NSLog(@"I2FSetterPreHandler: Enter Hook");
         NSString *rvaString = nil;
+        NSString *nameString = nil;
         @synchronized (gAddressToRvaMap) {
             rvaString = gAddressToRvaMap[@((unsigned long long)address)];
+            nameString = gAddressToNameMap[@((unsigned long long)address)];
         }
 
         void *str = I2FGetSecondArgument(ctx);
         NSString *text = I2FConvertIl2CppStringToNSString(str);
-        NSLog(@"I2FSetterPreHandler: text: '%@'\n rvaString: '%@'\n", text, rvaString);
+        NSLog(@"I2FSetterPreHandler: text: '%@'\n rvaString: '%@'\n name: '%@'", text, rvaString, nameString);
         if (text.length > 0) {
             [[I2FTextLogManager sharedManager] appendText:text rvaString:(rvaString ?: @"")];
         }
+        NSLog(@"I2FSetterPreHandler: Exit Hook");
     }
 }
 
@@ -61,8 +70,73 @@ static void I2FSetterPreHandler(void *address, DobbyRegisterContext *ctx) {
 + (void)initialize {
     if (self == [I2FIl2CppTextHookManager class]) {
         gAddressToRvaMap = [NSMutableDictionary dictionary];
+        gAddressToNameMap = [NSMutableDictionary dictionary];
         gInstalledAddresses = [NSMutableArray array];
     }
+}
+
+// 构建一张 "合法方法 RVA" 表，用于过滤掉非方法入口的地址，避免乱 hook 造成崩溃。
+static void I2FBuildValidMethodRvaSetIfNeeded(void) {
+    if (gValidMethodRvasBuilt) {
+        return;
+    }
+    gValidMethodRvasBuilt = YES;
+
+    if (!Variables::IL2CPP::il2cpp_domain_get || !Variables::IL2CPP::il2cpp_domain_get_assemblies) {
+        NSLog(@"[I2FIl2CppTextHookManager] IL2CPP symbols not ready, skip RVA validation.");
+        return;
+    }
+
+    void *domain = Variables::IL2CPP::il2cpp_domain_get();
+    if (!domain) {
+        NSLog(@"[I2FIl2CppTextHookManager] il2cpp_domain_get returned null.");
+        return;
+    }
+
+    size_t assemblyCount = 0;
+    void **assemblies = Variables::IL2CPP::il2cpp_domain_get_assemblies(domain, &assemblyCount);
+    if (!assemblies || assemblyCount == 0) {
+        NSLog(@"[I2FIl2CppTextHookManager] no assemblies found when building RVA table.");
+        return;
+    }
+
+    uint64_t baseAddress = (uint64_t)Variables::info.address;
+    if (baseAddress == 0) {
+        NSLog(@"[I2FIl2CppTextHookManager] base address is 0 when building RVA table.");
+        return;
+    }
+
+    for (size_t i = 0; i < assemblyCount; i++) {
+        const void *image = Variables::IL2CPP::il2cpp_assembly_get_image(assemblies[i]);
+        if (!image) {
+            continue;
+        }
+
+        const Variables::Il2CppImage *il2cppImage = static_cast<const Variables::Il2CppImage *>(image);
+        if (!Variables::IL2CPP::il2cpp_image_get_class_count || !Variables::IL2CPP::il2cpp_image_get_class) {
+            continue;
+        }
+
+        size_t classCount = Variables::IL2CPP::il2cpp_image_get_class_count(il2cppImage);
+        for (size_t j = 0; j < classCount; ++j) {
+            void *klass = Variables::IL2CPP::il2cpp_image_get_class(il2cppImage, j);
+            if (!klass) {
+                continue;
+            }
+
+            void *iter = nullptr;
+            while (auto method = Variables::IL2CPP::il2cpp_class_get_methods(klass, &iter)) {
+                auto methodPointer = *(void **)method;
+                if (!methodPointer) {
+                    continue;
+                }
+                uint64_t rva = (uint64_t)methodPointer - baseAddress;
+                gValidMethodRvas.insert(rva);
+            }
+        }
+    }
+
+    NSLog(@"[I2FIl2CppTextHookManager] Built valid RVA table with %zu entries.", gValidMethodRvas.size());
 }
 
 + (void)installHookWithBaseAddress:(unsigned long long)baseAddress
@@ -75,17 +149,31 @@ static void I2FSetterPreHandler(void *address, DobbyRegisterContext *ctx) {
 
 + (void)installHooksWithBaseAddress:(unsigned long long)baseAddress
                          rvaStrings:(NSArray<NSString *> *)rvaStrings {
-    if (baseAddress == 0 || rvaStrings.count == 0) {
+    NSMutableArray<NSDictionary *> *entries = [NSMutableArray arrayWithCapacity:rvaStrings.count];
+    for (NSString *rva in rvaStrings) {
+        if (rva.length == 0) continue;
+        [entries addObject:@{@"rva": rva}];
+    }
+    [self installHooksWithBaseAddress:baseAddress entries:entries];
+}
+
++ (void)installHooksWithBaseAddress:(unsigned long long)baseAddress
+                            entries:(NSArray<NSDictionary *> *)entries {
+    if (baseAddress == 0 || entries.count == 0) {
         return;
     }
 
-    NSLog(@"[I2FIl2CppTextHookManager] installHooks base=0x%llx, count=%lu, rvas=%@",
-          baseAddress, (unsigned long)rvaStrings.count, rvaStrings);
+    I2FBuildValidMethodRvaSetIfNeeded();
 
-    for (NSString *rvaString in rvaStrings) {
+    NSLog(@"[I2FIl2CppTextHookManager] installHooks base=0x%llx, count=%lu, entries=%@",
+          baseAddress, (unsigned long)entries.count, entries);
+
+    for (NSDictionary *entry in entries) {
+        NSString *rvaString = entry[@"rva"];
         if (rvaString.length == 0) {
             continue;
         }
+        NSString *name = entry[@"name"];
 
         // 统一使用 C 层解析，避免 NSScanner 在 16 进制场景下的歧义。
         NSString *trimmed = [rvaString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
@@ -110,18 +198,19 @@ static void I2FSetterPreHandler(void *address, DobbyRegisterContext *ctx) {
             continue;
         }
 
-        // 过滤掉过小的 RVA（一般不可能是方法体入口，避免误 hook 模块头部）。
         if (rva < 0x10000) {
             NSLog(@"[I2FIl2CppTextHookManager] skip too small RVA=0x%llx from '%@'", rva, rvaString);
             continue;
         }
 
-        if (rva == 0) {
+        // 校验该 RVA 是否存在于 "方法入口表" 中，避免 hook 到非方法地址。
+        if (!gValidMethodRvas.empty() && gValidMethodRvas.find(rva) == gValidMethodRvas.end()) {
+            NSLog(@"[I2FIl2CppTextHookManager] skip RVA=0x%llx from '%@' (not found in IL2CPP methods)", rva, rvaString);
             continue;
         }
 
         uintptr_t address = (uintptr_t)(baseAddress + rva);
-        NSLog(@"[I2FIl2CppTextHookManager] try hook RVA=%@ => addr=%p", rvaString, (void *)address);
+        NSLog(@"[I2FIl2CppTextHookManager] try hook RVA=%@ (%@) => addr=%p", rvaString, name, (void *)address);
         NSNumber *key = @((unsigned long long)address);
 
         @synchronized (gAddressToRvaMap) {
@@ -135,6 +224,9 @@ static void I2FSetterPreHandler(void *address, DobbyRegisterContext *ctx) {
             NSLog(@"[I2FIl2CppTextHookManager] DobbyInstrument success at %p", (void *)address);
             @synchronized (gAddressToRvaMap) {
                 gAddressToRvaMap[key] = rvaString;
+                if (name.length > 0) {
+                    gAddressToNameMap[key] = name;
+                }
                 [gInstalledAddresses addObject:key];
             }
         } else {

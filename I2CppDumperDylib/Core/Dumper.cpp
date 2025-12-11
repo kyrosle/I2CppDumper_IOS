@@ -6,6 +6,9 @@ namespace Dumper {
     void *domain = nullptr;
     DumpStatus status = DumpStatus::NONE;
     std::string dumpDir = "";
+    namespace SetText {
+        std::vector<std::pair<std::string, uint64_t>> entries;
+    }  // namespace SetText
     namespace GenScript {
         json jsonData = json::object();
         File scriptFile = File();
@@ -13,11 +16,27 @@ namespace Dumper {
     }  // namespace GenScript
 }  // namespace Dumper
 
+static void saveSetTextRvas(const std::string &dir) {
+    json arr = json::array();
+    for (const auto &entry : Dumper::SetText::entries) {
+        std::stringstream ss;
+        ss << "0x" << std::hex << std::uppercase << entry.second;
+        arr.push_back({{"name", entry.first}, {"rva", ss.str()}});
+    }
+
+    File out(dir + "/set_text_rvas.json", "w");
+    if (!out.ok()) return;
+    std::string data = arr.dump(4);
+    out.write(data);
+    out.close();
+}
+
 void Dumper::init() {
     Dumper::domain = Variables::IL2CPP::il2cpp_domain_get();
 #if GENSCRIPT
     GenScript::init();
 #endif
+    SetText::entries.clear();
 }
 
 std::vector<void *> Dumper::getAssemblies() {
@@ -164,6 +183,7 @@ Dumper::DumpStatus Dumper::dump(const std::string &dir, const std::string &heade
     GenScript::save();
     GenScript::scriptFile.close();
 #endif
+    saveSetTextRvas(dumpDir);
     return Dumper::DumpStatus::SUCCESS;
 }
 
@@ -313,6 +333,28 @@ std::string Dumper::dumpMethod(void *klass) {
             outPut.seekp(-2, outPut.cur);
         }
         outPut << ") { }\n\n";
+
+        // 收集 set_text 的元信息，输出到 set_text_rvas.json。
+        if (methodPointer && (flags & METHOD_ATTRIBUTE_ABSTRACT) == 0) {
+            const char *methodNameC = Variables::IL2CPP::il2cpp_method_get_name(method);
+            if (methodNameC) {
+                std::string methodName = methodNameC;
+                std::string lowered = methodName;
+                std::transform(lowered.begin(), lowered.end(), lowered.begin(), ::tolower);
+                if (lowered == "set_text") {
+                    const char *classNamespace = Variables::IL2CPP::il2cpp_class_get_namespace(klass);
+                    std::string className = getClassName(klass);
+                    std::string fullName;
+                    if (classNamespace && strlen(classNamespace) > 0) {
+                        fullName = std::string(classNamespace) + "." + className + "." + methodName;
+                    } else {
+                        fullName = className + "." + methodName;
+                    }
+                    uint64_t rva = (uint64_t)methodPointer - Variables::info.address;
+                    Dumper::SetText::entries.push_back({fullName, rva});
+                }
+            }
+        }
 
         // Add method to script
 #if GENSCRIPT

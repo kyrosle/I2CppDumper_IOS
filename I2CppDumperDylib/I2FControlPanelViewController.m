@@ -4,21 +4,30 @@
 #import "I2FDumpRvaParser.h"
 #import "I2FTextLogManager.h"
 #import "I2FIl2CppTextHookManager.h"
+#import "includes/SDAutoLayout/SDAutoLayout.h"
 
 @interface I2FControlPanelViewController () <UITableViewDataSource, UITableViewDelegate>
 
 @property (nonatomic, strong) UIView *containerView;
+@property (nonatomic, strong) UIScrollView *scrollView;
 @property (nonatomic, strong) UILabel *titleLabel;
 @property (nonatomic, strong) UILabel *autoDumpLabel;
 @property (nonatomic, strong) UISwitch *autoDumpSwitch;
+@property (nonatomic, strong) UILabel *autoHookLabel;
+@property (nonatomic, strong) UISwitch *autoHookSwitch;
+@property (nonatomic, strong) UILabel *hookAfterDumpLabel;
+@property (nonatomic, strong) UISwitch *hookAfterDumpSwitch;
 @property (nonatomic, strong) UIButton *resetDumpButton;
 @property (nonatomic, strong) UIButton *reparseButton;
+@property (nonatomic, strong) UIButton *clearHookButton;
 @property (nonatomic, strong) UIButton *clearLogButton;
 @property (nonatomic, strong) UILabel *rvaLabel;
+@property (nonatomic, strong) UITableView *hookTableView;
 @property (nonatomic, strong) UITableView *tableView;
 
 @property (nonatomic, copy) NSString *currentRvaString;
 @property (nonatomic, strong) NSArray<I2FTextLogEntry *> *entries;
+@property (nonatomic, strong) NSArray<NSDictionary *> *hookEntries;
 
 @end
 
@@ -35,56 +44,87 @@
     [self.view addSubview:container];
     self.containerView = container;
 
+    UIScrollView *scroll = [[UIScrollView alloc] initWithFrame:CGRectZero];
+    scroll.alwaysBounceVertical = YES;
+    scroll.showsVerticalScrollIndicator = YES;
+    [container addSubview:scroll];
+    self.scrollView = scroll;
+
     self.titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
     self.titleLabel.textColor = [UIColor whiteColor];
     self.titleLabel.font = [UIFont boldSystemFontOfSize:18];
     self.titleLabel.text = @"I2Fusion 控制面板";
-    [container addSubview:self.titleLabel];
 
     self.autoDumpSwitch = [[UISwitch alloc] initWithFrame:CGRectZero];
     self.autoDumpSwitch.on = [I2FConfigManager autoDumpEnabled];
     [self.autoDumpSwitch addTarget:self action:@selector(autoDumpSwitchChanged:) forControlEvents:UIControlEventValueChanged];
-    [container addSubview:self.autoDumpSwitch];
 
     self.autoDumpLabel = [[UILabel alloc] initWithFrame:CGRectZero];
     self.autoDumpLabel.textColor = [UIColor lightGrayColor];
     self.autoDumpLabel.font = [UIFont systemFontOfSize:13];
-    self.autoDumpLabel.text = @"启动时自动 dump（仅控制 dump，hook 始终开启）";
-    [container addSubview:self.autoDumpLabel];
+    self.autoDumpLabel.text = @"启动时自动 dump";
+
+    self.autoHookSwitch = [[UISwitch alloc] initWithFrame:CGRectZero];
+    self.autoHookSwitch.on = [I2FConfigManager autoInstallHookOnLaunch];
+    [self.autoHookSwitch addTarget:self action:@selector(autoHookSwitchChanged:) forControlEvents:UIControlEventValueChanged];
+
+    self.autoHookLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+    self.autoHookLabel.textColor = [UIColor lightGrayColor];
+    self.autoHookLabel.font = [UIFont systemFontOfSize:13];
+    self.autoHookLabel.text = @"启动时自动安装 set_Text hook";
+
+    self.hookAfterDumpSwitch = [[UISwitch alloc] initWithFrame:CGRectZero];
+    self.hookAfterDumpSwitch.on = [I2FConfigManager autoInstallHookAfterDump];
+    [self.hookAfterDumpSwitch addTarget:self action:@selector(hookAfterDumpSwitchChanged:) forControlEvents:UIControlEventValueChanged];
+
+    self.hookAfterDumpLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+    self.hookAfterDumpLabel.textColor = [UIColor lightGrayColor];
+    self.hookAfterDumpLabel.font = [UIFont systemFontOfSize:13];
+    self.hookAfterDumpLabel.text = @"dump 成功后自动安装最新 hook";
 
     self.resetDumpButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [self.resetDumpButton setTitle:@"重置 dump 标记" forState:UIControlStateNormal];
     [self.resetDumpButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     self.resetDumpButton.titleLabel.font = [UIFont systemFontOfSize:13];
     [self.resetDumpButton addTarget:self action:@selector(resetDumpTapped) forControlEvents:UIControlEventTouchUpInside];
-    [container addSubview:self.resetDumpButton];
 
     self.reparseButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [self.reparseButton setTitle:@"重新解析 dump.cs" forState:UIControlStateNormal];
     [self.reparseButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     self.reparseButton.titleLabel.font = [UIFont systemFontOfSize:13];
     [self.reparseButton addTarget:self action:@selector(reparseTapped) forControlEvents:UIControlEventTouchUpInside];
-    [container addSubview:self.reparseButton];
+
+    self.clearHookButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    [self.clearHookButton setTitle:@"清空 hook 列表" forState:UIControlStateNormal];
+    [self.clearHookButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    self.clearHookButton.titleLabel.font = [UIFont systemFontOfSize:13];
+    [self.clearHookButton addTarget:self action:@selector(clearHookTapped) forControlEvents:UIControlEventTouchUpInside];
 
     self.clearLogButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [self.clearLogButton setTitle:@"清空日志" forState:UIControlStateNormal];
     [self.clearLogButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     self.clearLogButton.titleLabel.font = [UIFont systemFontOfSize:13];
     [self.clearLogButton addTarget:self action:@selector(clearLogTapped) forControlEvents:UIControlEventTouchUpInside];
-    [container addSubview:self.clearLogButton];
 
     self.rvaLabel = [[UILabel alloc] initWithFrame:CGRectZero];
     self.rvaLabel.textColor = [UIColor lightGrayColor];
     self.rvaLabel.font = [UIFont systemFontOfSize:12];
-    [container addSubview:self.rvaLabel];
+
+    self.hookTableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+    self.hookTableView.dataSource = self;
+    self.hookTableView.delegate = self;
+    self.hookTableView.backgroundColor = [UIColor clearColor];
+    self.hookTableView.separatorColor = [UIColor darkGrayColor];
+    self.hookTableView.scrollEnabled = YES;
 
     self.tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
     self.tableView.backgroundColor = [UIColor clearColor];
     self.tableView.separatorColor = [UIColor darkGrayColor];
-    [container addSubview:self.tableView];
 
+    [self buildLeftStackLayout];
+    [self buildRightLogLayout];
     [self reloadData];
 
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -97,6 +137,118 @@
                                                object:nil];
 }
 
+- (UIView *)addSwitchRowWithLabel:(UILabel *)label
+                    switchControl:(UISwitch *)switchControl
+                          topView:(UIView *)topView
+                          padding:(CGFloat)padding {
+    UIView *row = [[UIView alloc] initWithFrame:CGRectZero];
+    [self.scrollView addSubview:row];
+    if (topView) {
+        row.sd_layout.leftSpaceToView(self.scrollView, padding)
+                     .rightSpaceToView(self.scrollView, padding)
+                     .topSpaceToView(topView, padding)
+                     .heightIs(36.0);
+    } else {
+        row.sd_layout.leftSpaceToView(self.scrollView, padding)
+                     .rightSpaceToView(self.scrollView, padding)
+                     .topSpaceToView(self.scrollView, padding)
+                     .heightIs(36.0);
+    }
+
+    [row addSubview:label];
+    [row addSubview:switchControl];
+
+    [switchControl sizeToFit];
+    CGFloat switchWidth = MAX(50.0, switchControl.bounds.size.width);
+    CGFloat switchHeight = MAX(30.0, switchControl.bounds.size.height);
+
+    switchControl.sd_layout.rightSpaceToView(row, 0)
+                           .centerYEqualToView(row)
+                           .widthIs(switchWidth)
+                           .heightIs(switchHeight);
+    label.sd_layout.leftSpaceToView(row, 0)
+                    .centerYEqualToView(row)
+                    .rightSpaceToView(switchControl, 8.0)
+                    .heightIs(20.0);
+    return row;
+}
+
+- (UIView *)addButtonRowWithLeft:(UIButton *)leftButton
+                           right:(UIButton *)rightButton
+                          topView:(UIView *)topView
+                          padding:(CGFloat)padding {
+    UIView *row = [[UIView alloc] initWithFrame:CGRectZero];
+    [self.scrollView addSubview:row];
+    row.sd_layout.leftSpaceToView(self.scrollView, padding)
+                 .rightSpaceToView(self.scrollView, padding)
+                 .topSpaceToView(topView, padding)
+                 .heightIs(32.0);
+
+    [row addSubview:leftButton];
+    [row addSubview:rightButton];
+
+    leftButton.sd_layout.leftSpaceToView(row, 0)
+                        .topSpaceToView(row, 0)
+                        .bottomSpaceToView(row, 0)
+                        .widthRatioToView(row, 0.48);
+    rightButton.sd_layout.rightSpaceToView(row, 0)
+                         .topSpaceToView(row, 0)
+                         .bottomSpaceToView(row, 0)
+                         .widthRatioToView(row, 0.48);
+    return row;
+}
+
+- (void)buildLeftStackLayout {
+    CGFloat padding = 12.0;
+    UIScrollView *scroll = self.scrollView;
+
+    [scroll addSubview:self.titleLabel];
+    self.titleLabel.sd_layout.leftSpaceToView(scroll, padding)
+                           .rightSpaceToView(scroll, padding)
+                           .topSpaceToView(scroll, padding)
+                           .heightIs(22.0);
+
+    UIView *row1 = [self addSwitchRowWithLabel:self.autoDumpLabel
+                                  switchControl:self.autoDumpSwitch
+                                        topView:self.titleLabel
+                                        padding:10.0];
+    UIView *row2 = [self addSwitchRowWithLabel:self.autoHookLabel
+                                  switchControl:self.autoHookSwitch
+                                        topView:row1
+                                        padding:8.0];
+    UIView *row3 = [self addSwitchRowWithLabel:self.hookAfterDumpLabel
+                                  switchControl:self.hookAfterDumpSwitch
+                                        topView:row2
+                                        padding:8.0];
+
+    UIView *btnRow1 = [self addButtonRowWithLeft:self.resetDumpButton
+                                           right:self.reparseButton
+                                          topView:row3
+                                          padding:12.0];
+    UIView *btnRow2 = [self addButtonRowWithLeft:self.clearHookButton
+                                           right:self.clearLogButton
+                                          topView:btnRow1
+                                          padding:8.0];
+
+    [scroll addSubview:self.rvaLabel];
+    self.rvaLabel.sd_layout.leftSpaceToView(scroll, padding)
+                           .rightSpaceToView(scroll, padding)
+                           .topSpaceToView(btnRow2, 12.0)
+                           .heightIs(18.0);
+
+    [scroll addSubview:self.hookTableView];
+    self.hookTableView.sd_layout.leftEqualToView(self.rvaLabel)
+                                .rightEqualToView(self.rvaLabel)
+                                .topSpaceToView(self.rvaLabel, 8.0)
+                                .heightIs(180.0);
+
+    [scroll setupAutoContentSizeWithBottomView:self.hookTableView bottomMargin:padding];
+}
+
+- (void)buildRightLogLayout {
+    [self.containerView addSubview:self.tableView];
+}
+
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
@@ -105,7 +257,10 @@
     [super viewDidLayoutSubviews];
 
     self.view.userInteractionEnabled = YES;
+    [self applyOrientationLayout];
+}
 
+- (void)applyOrientationLayout {
     if (!self.containerView) {
         return;
     }
@@ -118,85 +273,65 @@
         safeInsets = self.view.safeAreaInsets;
     }
 
+    [self.containerView sd_resetLayout];
     if (isLandscape) {
-        CGFloat width = size.width * 0.4;
-        self.containerView.frame = CGRectMake(size.width - width,
-                                              safeInsets.top,
-                                              width,
-                                              size.height - safeInsets.top - safeInsets.bottom);
+        self.containerView.sd_layout.topSpaceToView(self.view, safeInsets.top)
+                                  .bottomSpaceToView(self.view, safeInsets.bottom)
+                                  .rightSpaceToView(self.view, 0)
+                                  .widthRatioToView(self.view, 0.75);
     } else {
-        CGFloat height = size.height * 0.5;
-        self.containerView.frame = CGRectMake(0,
-                                              size.height - height - safeInsets.bottom,
-                                              size.width,
-                                              height);
+        self.containerView.sd_layout.leftSpaceToView(self.view, 0)
+                                  .rightSpaceToView(self.view, 0)
+                                  .bottomSpaceToView(self.view, safeInsets.bottom)
+                                  .heightRatioToView(self.view, 0.75);
     }
 
-    CGRect bounds = self.containerView.bounds;
     CGFloat padding = 16.0;
 
-    CGFloat y = 12.0;
-    CGFloat switchWidth = self.autoDumpSwitch.bounds.size.width;
-    CGFloat switchHeight = self.autoDumpSwitch.bounds.size.height;
+    [self.scrollView sd_resetLayout];
+    [self.tableView sd_resetLayout];
 
-    self.titleLabel.frame = CGRectMake(padding,
-                                       y,
-                                       bounds.size.width - padding * 3 - switchWidth,
-                                       24.0);
+    if (isLandscape) {
+        self.scrollView.sd_layout.leftSpaceToView(self.containerView, padding)
+                                .topSpaceToView(self.containerView, padding)
+                                .bottomSpaceToView(self.containerView, padding)
+                                .widthRatioToView(self.containerView, 0.5);
 
-    self.autoDumpSwitch.frame = CGRectMake(CGRectGetMaxX(self.titleLabel.frame) + padding,
-                                           y,
-                                           switchWidth,
-                                           switchHeight);
+        self.tableView.sd_layout.leftSpaceToView(self.scrollView, padding)
+                               .rightSpaceToView(self.containerView, padding)
+                               .topEqualToView(self.scrollView)
+                               .bottomEqualToView(self.scrollView);
+    } else {
+        self.scrollView.sd_layout.leftSpaceToView(self.containerView, padding)
+                                .rightSpaceToView(self.containerView, padding)
+                                .topSpaceToView(self.containerView, padding)
+                                .heightRatioToView(self.containerView, 0.45);
 
-    y = CGRectGetMaxY(self.titleLabel.frame) + 8.0;
-    self.autoDumpLabel.frame = CGRectMake(padding,
-                                          y,
-                                          bounds.size.width - padding * 2,
-                                          20.0);
+        self.tableView.sd_layout.leftEqualToView(self.scrollView)
+                               .rightEqualToView(self.scrollView)
+                               .topSpaceToView(self.scrollView, padding)
+                               .bottomSpaceToView(self.containerView, padding);
+    }
 
-    y = CGRectGetMaxY(self.autoDumpLabel.frame) + 8.0;
-    CGFloat buttonHeight = 28.0;
-    CGFloat buttonWidth = 120.0;
-    self.resetDumpButton.frame = CGRectMake(padding,
-                                            y,
-                                            buttonWidth,
-                                            buttonHeight);
-
-    self.reparseButton.frame = CGRectMake(CGRectGetMaxX(self.resetDumpButton.frame) + 12.0,
-                                          y,
-                                          buttonWidth,
-                                          buttonHeight);
-
-    self.clearLogButton.frame = CGRectMake(CGRectGetMaxX(self.reparseButton.frame) + 12.0,
-                                           y,
-                                           buttonWidth,
-                                           buttonHeight);
-
-    y = CGRectGetMaxY(self.resetDumpButton.frame) + 8.0;
-    self.rvaLabel.frame = CGRectMake(padding,
-                                     y,
-                                     bounds.size.width - padding * 2,
-                                     18.0);
-
-    CGFloat tableTop = CGRectGetMaxY(self.rvaLabel.frame) + 8.0;
-    self.tableView.frame = CGRectMake(0,
-                                      tableTop,
-                                      bounds.size.width,
-                                      bounds.size.height - tableTop);
+    [self.view layoutIfNeeded];
+    // 强制 SDAutoLayout 计算各视图 frame，确保容器和子视图在旋转后可见。
+    [self.containerView updateLayout];
+    [self.scrollView updateLayout];
+    [self.tableView updateLayout];
 }
 
 - (void)reloadData {
     self.entries = [[I2FTextLogManager sharedManager] allEntries];
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString *storedRva = [defaults stringForKey:@"I2F.SetTextRvaString"];
-    NSArray<NSString *> *allRvas = [defaults arrayForKey:@"I2F.SetTextRvaStrings"];
+    NSString *storedRva = [I2FConfigManager primarySetTextRvaString];
+    NSArray<NSDictionary *> *entries = [I2FConfigManager setTextHookEntries];
+    self.hookEntries = entries;
     self.currentRvaString = storedRva ?: @"未解析";
-    if (allRvas.count > 1) {
-        self.rvaLabel.text = [NSString stringWithFormat:@"当前 set_Text RVA: %@ 等 %lu 个", self.currentRvaString, (unsigned long)allRvas.count];
+    if (entries.count > 0) {
+        self.rvaLabel.text = [NSString stringWithFormat:@"当前 set_Text hook: %@ 等 %lu 个", self.currentRvaString, (unsigned long)entries.count];
     } else {
-        self.rvaLabel.text = [NSString stringWithFormat:@"当前 set_Text RVA: %@", self.currentRvaString];
+        self.rvaLabel.text = @"当前 set_Text hook: 未配置";
     }
+    [self.hookTableView reloadData];
     [self.tableView reloadData];
 }
 
@@ -222,8 +357,23 @@
     [I2FConfigManager setAutoDumpEnabled:sender.isOn];
 }
 
+- (void)autoHookSwitchChanged:(UISwitch *)sender {
+    [I2FConfigManager setAutoInstallHookOnLaunch:sender.isOn];
+}
+
+- (void)hookAfterDumpSwitchChanged:(UISwitch *)sender {
+    [I2FConfigManager setAutoInstallHookAfterDump:sender.isOn];
+}
+
 - (void)resetDumpTapped {
     [I2FConfigManager resetDumpFlags];
+}
+
+- (void)clearHookTapped {
+    [I2FConfigManager setSetTextHookEntries:@[]];
+    [I2FConfigManager setSetTextRvaStrings:@[]];
+    [I2FConfigManager setPrimarySetTextRvaString:nil];
+    [self reloadData];
 }
 
 - (void)clearLogTapped {
@@ -231,28 +381,33 @@
 }
 
 - (void)reparseTapped {
-    NSString *dumpPath = [[NSUserDefaults standardUserDefaults] stringForKey:@"I2F.LastDumpDirectory"];
+    NSString *dumpPath = [I2FConfigManager lastDumpDirectory];
     if (dumpPath.length == 0) {
         [self reloadData];
         return;
     }
 
-    NSArray<NSString *> *allRvas = [I2FDumpRvaParser allSetTextRvaStringsInDumpDirectory:dumpPath];
-    if (allRvas.count == 0) {
+    NSArray<NSDictionary *> *entries = [I2FDumpRvaParser allSetTextEntriesInDumpDirectory:dumpPath];
+    if (entries.count == 0) {
         [self reloadData];
         return;
     }
 
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [defaults setObject:allRvas forKey:@"I2F.SetTextRvaStrings"];
-    NSString *firstRva = allRvas.firstObject;
-    [defaults setObject:firstRva forKey:@"I2F.SetTextRvaString"];
-    [defaults synchronize];
+    [I2FConfigManager setSetTextHookEntries:entries];
+    NSMutableArray<NSString *> *rvas = [NSMutableArray array];
+    for (NSDictionary *item in entries) {
+        NSString *rva = item[@"rva"];
+        if (rva.length > 0) {
+            [rvas addObject:rva];
+        }
+    }
+    [I2FConfigManager setSetTextRvaStrings:rvas];
+    [I2FConfigManager setPrimarySetTextRvaString:rvas.firstObject];
 
     extern unsigned long long I2FCurrentIl2CppBaseAddress(void);
     unsigned long long base = I2FCurrentIl2CppBaseAddress();
     if (base != 0) {
-        [I2FIl2CppTextHookManager installHooksWithBaseAddress:base rvaStrings:allRvas];
+        [I2FIl2CppTextHookManager installHooksWithBaseAddress:base entries:entries];
     }
 
     [self reloadData];
@@ -261,10 +416,35 @@
 #pragma mark - UITableView
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    if (tableView == self.hookTableView) {
+        return self.hookEntries.count;
+    }
     return self.entries.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (tableView == self.hookTableView) {
+        static NSString *hookCellId = @"I2FHookCell";
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:hookCellId];
+        if (!cell) {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:hookCellId];
+            cell.backgroundColor = [UIColor clearColor];
+            cell.textLabel.textColor = [UIColor whiteColor];
+            cell.detailTextLabel.textColor = [UIColor lightGrayColor];
+            cell.textLabel.font = [UIFont boldSystemFontOfSize:12];
+            cell.detailTextLabel.font = [UIFont systemFontOfSize:11];
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
+            cell.textLabel.numberOfLines = 1;
+            cell.detailTextLabel.numberOfLines = 1;
+        }
+        NSDictionary *hook = self.hookEntries[indexPath.row];
+        NSString *name = hook[@"name"];
+        NSString *rva = hook[@"rva"] ?: @"";
+        cell.textLabel.text = name.length > 0 ? name : @"(未命名)";
+        cell.detailTextLabel.text = [NSString stringWithFormat:@"RVA: %@", rva];
+        return cell;
+    }
+
     static NSString *cellId = @"I2FTextCell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellId];
     if (!cell) {
@@ -273,6 +453,7 @@
         cell.textLabel.textColor = [UIColor whiteColor];
         cell.detailTextLabel.textColor = [UIColor lightGrayColor];
         cell.textLabel.numberOfLines = 2;
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     I2FTextLogEntry *entry = self.entries[indexPath.row];
     cell.textLabel.text = entry.text;
@@ -281,6 +462,10 @@
     NSString *time = [fmt stringFromDate:entry.timestamp];
     cell.detailTextLabel.text = [NSString stringWithFormat:@"[%@] RVA: %@", time, entry.rvaString];
     return cell;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return 40.0;
 }
 
 @end

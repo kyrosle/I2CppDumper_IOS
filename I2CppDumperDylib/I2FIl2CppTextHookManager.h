@@ -13,6 +13,10 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)installHooksWithBaseAddress:(unsigned long long)baseAddress
                          rvaStrings:(NSArray<NSString *> *)rvaStrings;
 
+/// 使用基址和带 name 的条目安装 hook，entry 包含 @"rva" 必填（十六进制字符串），@"name" 可选。
++ (void)installHooksWithBaseAddress:(unsigned long long)baseAddress
+                            entries:(NSArray<NSDictionary *> *)entries;
+
 @end
 
 NS_ASSUME_NONNULL_END

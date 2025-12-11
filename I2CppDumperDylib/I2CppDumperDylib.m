@@ -23,8 +23,11 @@ void StartIl2CppDumpThread(void);
 CHConstructor{
     printf(INSERT_SUCCESS_WELCOME);
 
-    // 根据配置决定是否需要执行 dump（hook 始终随线程初始化）。
-    if ([I2FConfigManager autoDumpEnabled] || ![I2FConfigManager hasDumpedOnce]) {
+    // 根据配置决定是否需要启动线程：自动 dump、启动时安装 hook 或 dump 后自动安装 hook 三者有其一即启动。
+    BOOL needThread = [I2FConfigManager autoDumpEnabled]
+                   || [I2FConfigManager autoInstallHookOnLaunch]
+                   || [I2FConfigManager autoInstallHookAfterDump];
+    if (needThread) {
         StartIl2CppDumpThread();
     }
     

@@ -5,6 +5,7 @@
 #include <cstdint>
 #include <fstream>
 #include <sstream>
+#include <algorithm>
 #include <types.h>
 #include <unordered_set>
 
