@@ -101,6 +101,20 @@
 		6B5B4B692EE9849C001C9752 /* AlertUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B5B4B662EE9849C001C9752 /* AlertUtils.h */; };
 		6B93FC382EEA68FF002A5936 /* MISFloatingBall.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B93FC372EEA68FF002A5936 /* MISFloatingBall.m */; };
 		6B93FC392EEA68FF002A5936 /* MISFloatingBall.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B93FC362EEA68FF002A5936 /* MISFloatingBall.h */; };
+		6B93FC3C2EEA6D87002A5936 /* I2FTextLogManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B93FC3B2EEA6D87002A5936 /* I2FTextLogManager.m */; };
+		6B93FC3D2EEA6D87002A5936 /* I2FTextLogManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B93FC3A2EEA6D87002A5936 /* I2FTextLogManager.h */; };
+		6B93FC482EEA6D93002A5936 /* I2FConfigManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B93FC3F2EEA6D93002A5936 /* I2FConfigManager.m */; };
+		6B93FC492EEA6D93002A5936 /* I2FControlPanelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B93FC412EEA6D93002A5936 /* I2FControlPanelViewController.m */; };
+		6B93FC4A2EEA6D93002A5936 /* I2FFloatingBallManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B93FC452EEA6D93002A5936 /* I2FFloatingBallManager.m */; };
+		6B93FC4B2EEA6D93002A5936 /* I2FIl2CppTextHookManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6B93FC472EEA6D93002A5936 /* I2FIl2CppTextHookManager.mm */; };
+		6B93FC4C2EEA6D93002A5936 /* I2FDumpRvaParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B93FC432EEA6D93002A5936 /* I2FDumpRvaParser.m */; };
+		6B93FC4D2EEA6D93002A5936 /* I2FConfigManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B93FC3E2EEA6D93002A5936 /* I2FConfigManager.h */; };
+		6B93FC4E2EEA6D93002A5936 /* I2FDumpRvaParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B93FC422EEA6D93002A5936 /* I2FDumpRvaParser.h */; };
+		6B93FC4F2EEA6D93002A5936 /* I2FControlPanelViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B93FC402EEA6D93002A5936 /* I2FControlPanelViewController.h */; };
+		6B93FC502EEA6D93002A5936 /* I2FFloatingBallManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B93FC442EEA6D93002A5936 /* I2FFloatingBallManager.h */; };
+		6B93FC512EEA6D93002A5936 /* I2FIl2CppTextHookManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B93FC462EEA6D93002A5936 /* I2FIl2CppTextHookManager.h */; };
+		6B93FC532EEA73E5002A5936 /* dobby.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B93FC522EEA73E5002A5936 /* dobby.h */; };
+		6B93FC582EEA7521002A5936 /* libdobby.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B93FC552EEA7521002A5936 /* libdobby.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -230,6 +244,20 @@
 		6B5B4B672EE9849C001C9752 /* AlertUtils.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = AlertUtils.mm; sourceTree = "<group>"; };
 		6B93FC362EEA68FF002A5936 /* MISFloatingBall.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MISFloatingBall.h; sourceTree = "<group>"; };
 		6B93FC372EEA68FF002A5936 /* MISFloatingBall.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MISFloatingBall.m; sourceTree = "<group>"; };
+		6B93FC3A2EEA6D87002A5936 /* I2FTextLogManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = I2FTextLogManager.h; sourceTree = "<group>"; };
+		6B93FC3B2EEA6D87002A5936 /* I2FTextLogManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = I2FTextLogManager.m; sourceTree = "<group>"; };
+		6B93FC3E2EEA6D93002A5936 /* I2FConfigManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = I2FConfigManager.h; sourceTree = "<group>"; };
+		6B93FC3F2EEA6D93002A5936 /* I2FConfigManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = I2FConfigManager.m; sourceTree = "<group>"; };
+		6B93FC402EEA6D93002A5936 /* I2FControlPanelViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = I2FControlPanelViewController.h; sourceTree = "<group>"; };
+		6B93FC412EEA6D93002A5936 /* I2FControlPanelViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = I2FControlPanelViewController.m; sourceTree = "<group>"; };
+		6B93FC422EEA6D93002A5936 /* I2FDumpRvaParser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = I2FDumpRvaParser.h; sourceTree = "<group>"; };
+		6B93FC432EEA6D93002A5936 /* I2FDumpRvaParser.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = I2FDumpRvaParser.m; sourceTree = "<group>"; };
+		6B93FC442EEA6D93002A5936 /* I2FFloatingBallManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = I2FFloatingBallManager.h; sourceTree = "<group>"; };
+		6B93FC452EEA6D93002A5936 /* I2FFloatingBallManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = I2FFloatingBallManager.m; sourceTree = "<group>"; };
+		6B93FC462EEA6D93002A5936 /* I2FIl2CppTextHookManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = I2FIl2CppTextHookManager.h; sourceTree = "<group>"; };
+		6B93FC472EEA6D93002A5936 /* I2FIl2CppTextHookManager.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = I2FIl2CppTextHookManager.mm; sourceTree = "<group>"; };
+		6B93FC522EEA73E5002A5936 /* dobby.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = dobby.h; sourceTree = "<group>"; };
+		6B93FC552EEA7521002A5936 /* libdobby.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libdobby.a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -271,6 +299,7 @@
 				6B5B493F2EE966C8001C9752 /* JavaScriptCore.framework in Frameworks */,
 				6B5B49432EE966C8001C9752 /* UIKit.framework in Frameworks */,
 				6B5B49412EE966C8001C9752 /* Foundation.framework in Frameworks */,
+				6B93FC582EEA7521002A5936 /* libdobby.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -313,6 +342,18 @@
 				6B5B4AE12EE9841D001C9752 /* Core */,
 				6B5B4B662EE9849C001C9752 /* AlertUtils.h */,
 				6B5B4B672EE9849C001C9752 /* AlertUtils.mm */,
+				6B93FC3E2EEA6D93002A5936 /* I2FConfigManager.h */,
+				6B93FC3F2EEA6D93002A5936 /* I2FConfigManager.m */,
+				6B93FC402EEA6D93002A5936 /* I2FControlPanelViewController.h */,
+				6B93FC412EEA6D93002A5936 /* I2FControlPanelViewController.m */,
+				6B93FC422EEA6D93002A5936 /* I2FDumpRvaParser.h */,
+				6B93FC432EEA6D93002A5936 /* I2FDumpRvaParser.m */,
+				6B93FC442EEA6D93002A5936 /* I2FFloatingBallManager.h */,
+				6B93FC452EEA6D93002A5936 /* I2FFloatingBallManager.m */,
+				6B93FC462EEA6D93002A5936 /* I2FIl2CppTextHookManager.h */,
+				6B93FC472EEA6D93002A5936 /* I2FIl2CppTextHookManager.mm */,
+				6B93FC3A2EEA6D87002A5936 /* I2FTextLogManager.h */,
+				6B93FC3B2EEA6D87002A5936 /* I2FTextLogManager.m */,
 				6B5B497D2EE966C8001C9752 /* I2CppDumperDylib.h */,
 				6B5B497F2EE966C8001C9752 /* I2CppDumperDylib.m */,
 				6B5B4B5C2EE98438001C9752 /* Il2CppDumpEntry.mm */,
@@ -504,6 +545,7 @@
 		6B5B4B252EE98428001C9752 /* includes */ = {
 			isa = PBXGroup;
 			children = (
+				6B93FC542EEA74F1002A5936 /* Dobby */,
 				6B93FC352EEA68DF002A5936 /* MISFloatingBall */,
 				6B5B4AEB2EE98428001C9752 /* nlohmann */,
 				6B5B4AFE2EE98428001C9752 /* SCLAlertView */,
@@ -520,6 +562,15 @@
 				6B93FC372EEA68FF002A5936 /* MISFloatingBall.m */,
 			);
 			path = MISFloatingBall;
+			sourceTree = "<group>";
+		};
+		6B93FC542EEA74F1002A5936 /* Dobby */ = {
+			isa = PBXGroup;
+			children = (
+				6B93FC522EEA73E5002A5936 /* dobby.h */,
+				6B93FC552EEA7521002A5936 /* libdobby.a */,
+			);
+			path = Dobby;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -547,6 +598,7 @@
 				6B5B4B452EE98428001C9752 /* mz_strm_wzaes.h in Headers */,
 				6B5B4B462EE98428001C9752 /* mz_zip.h in Headers */,
 				6B5B4B472EE98428001C9752 /* SSZipArchive.h in Headers */,
+				6B93FC532EEA73E5002A5936 /* dobby.h in Headers */,
 				6B5B4B692EE9849C001C9752 /* AlertUtils.h in Headers */,
 				6B93FC392EEA68FF002A5936 /* MISFloatingBall.h in Headers */,
 				6B5B4B482EE98428001C9752 /* mz_strm_os.h in Headers */,
@@ -555,11 +607,17 @@
 				6B5B4B4B2EE98428001C9752 /* mz_os.h in Headers */,
 				6B5B4B4C2EE98428001C9752 /* mz_compat.h in Headers */,
 				6B5B4B4D2EE98428001C9752 /* types.h in Headers */,
+				6B93FC3D2EEA6D87002A5936 /* I2FTextLogManager.h in Headers */,
 				6B5B4B4E2EE98428001C9752 /* mz_strm_buf.h in Headers */,
 				6B5B4B4F2EE98428001C9752 /* mz_strm_pkcrypt.h in Headers */,
 				6B5B4B502EE98428001C9752 /* UIImage+ImageEffects.h in Headers */,
 				6B5B4B612EE98444001C9752 /* I2CppDumperDylib-Prefix.pch in Headers */,
 				6B5B4B512EE98428001C9752 /* SCLTimerDisplay.h in Headers */,
+				6B93FC4D2EEA6D93002A5936 /* I2FConfigManager.h in Headers */,
+				6B93FC4E2EEA6D93002A5936 /* I2FDumpRvaParser.h in Headers */,
+				6B93FC4F2EEA6D93002A5936 /* I2FControlPanelViewController.h in Headers */,
+				6B93FC502EEA6D93002A5936 /* I2FFloatingBallManager.h in Headers */,
+				6B93FC512EEA6D93002A5936 /* I2FIl2CppTextHookManager.h in Headers */,
 				6B5B4B522EE98428001C9752 /* ZipArchive.h in Headers */,
 				6B5B4B532EE98428001C9752 /* SCLAlertViewResponder.h in Headers */,
 				6B5B4B542EE98428001C9752 /* SCLAlertView.h in Headers */,
@@ -755,6 +813,11 @@
 				6B5B4B302EE98428001C9752 /* mz_strm_zlib.c in Sources */,
 				6B5B4B312EE98428001C9752 /* mz_compat.c in Sources */,
 				6B5B4B322EE98428001C9752 /* SCLButton.m in Sources */,
+				6B93FC482EEA6D93002A5936 /* I2FConfigManager.m in Sources */,
+				6B93FC492EEA6D93002A5936 /* I2FControlPanelViewController.m in Sources */,
+				6B93FC4A2EEA6D93002A5936 /* I2FFloatingBallManager.m in Sources */,
+				6B93FC4B2EEA6D93002A5936 /* I2FIl2CppTextHookManager.mm in Sources */,
+				6B93FC4C2EEA6D93002A5936 /* I2FDumpRvaParser.m in Sources */,
 				6B5B4B332EE98428001C9752 /* mz_strm.c in Sources */,
 				6B5B4B342EE98428001C9752 /* UIImage+ImageEffects.m in Sources */,
 				6B5B4B352EE98428001C9752 /* mz_crypt.c in Sources */,
@@ -764,6 +827,7 @@
 				6B5B4B682EE9849C001C9752 /* AlertUtils.mm in Sources */,
 				6B5B4B392EE98428001C9752 /* mz_os.c in Sources */,
 				6B5B4B3A2EE98428001C9752 /* mz_strm_wzaes.c in Sources */,
+				6B93FC3C2EEA6D87002A5936 /* I2FTextLogManager.m in Sources */,
 				6B5B4B3B2EE98428001C9752 /* mz_zip.c in Sources */,
 				6B5B4B3C2EE98428001C9752 /* mz_strm_mem.c in Sources */,
 				6B5B4B3D2EE98428001C9752 /* mz_strm_buf.c in Sources */,
@@ -835,6 +899,7 @@
 					"$(inherited)",
 					"$(MonkeyDevPath)/Frameworks",
 					"$(MonkeyDevTheosPath)/vendor/lib/**",
+					"$(PROJECT_DIR)/I2CppDumperDylib/includes/Dobby",
 				);
 				MonkeyDevPath = /opt/MonkeyDev;
 				MonkeyDevTheosPath = /opt/theos;
@@ -894,6 +959,7 @@
 					"$(inherited)",
 					"$(MonkeyDevPath)/Frameworks",
 					"$(MonkeyDevTheosPath)/vendor/lib/**",
+					"$(PROJECT_DIR)/I2CppDumperDylib/includes/Dobby",
 				);
 				MonkeyDevPath = /opt/MonkeyDev;
 				MonkeyDevTheosPath = /opt/theos;

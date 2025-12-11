@@ -12,6 +12,14 @@
 #include "Core/Il2cpp.hpp"
 #include "Core/Dumper.hpp"
 
+#import "I2FConfigManager.h"
+#import "I2FDumpRvaParser.h"
+#import "I2FIl2CppTextHookManager.h"
+
+extern "C" unsigned long long I2FCurrentIl2CppBaseAddress(void) {
+    return (unsigned long long)Variables::info.address;
+}
+
 static void dump_thread(void) {
     showInfo([NSString stringWithFormat:@"Dumping after %d seconds.", WAIT_TIME_SEC], WAIT_TIME_SEC / 2.0f);
 
@@ -48,6 +56,18 @@ static void dump_thread(void) {
         }
     }
 
+    // 安装 set_Text hook（使用之前从 dump.cs 解析得到的 RVA，如果有的话）。
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSArray<NSString *> *storedRvas = [defaults arrayForKey:@"I2F.SetTextRvaStrings"];
+    NSString *storedRva = [defaults stringForKey:@"I2F.SetTextRvaString"];
+    if (storedRvas.count > 0) {
+        [I2FIl2CppTextHookManager installHooksWithBaseAddress:(unsigned long long)Variables::info.address
+                                                   rvaStrings:storedRvas];
+    } else if (storedRva.length > 0) {
+        [I2FIl2CppTextHookManager installHookWithBaseAddress:(unsigned long long)Variables::info.address
+                                                   rvaString:storedRva];
+    }
+
     NSLog(@"[I2CppDumper] UNITY_PATH: %@", dumpPath);
 
     NSFileManager *fileManager = [NSFileManager defaultManager];
@@ -69,27 +89,57 @@ static void dump_thread(void) {
         return;
     }
 
-    SCLAlertView *waitingAlert = nil;
-    showWaiting(@"Dumping...", &waitingAlert);
+    BOOL shouldDump = [I2FConfigManager autoDumpEnabled] || ![I2FConfigManager hasDumpedOnce];
 
-    Dumper::DumpStatus dumpStatus = Dumper::dump(dumpPath.UTF8String, headersDumpPath.UTF8String);
+    SCLAlertView *waitingAlert = nil;
+    if (shouldDump) {
+        showWaiting(@"Dumping...", &waitingAlert);
+    }
+
+    Dumper::DumpStatus dumpStatus = Dumper::DumpStatus::SUCCESS;
+    if (shouldDump) {
+        dumpStatus = Dumper::dump(dumpPath.UTF8String, headersDumpPath.UTF8String);
+    }
 
     if ([fileManager fileExistsAtPath:zipDumpPath]) {
         [fileManager removeItemAtPath:zipDumpPath error:nil];
     }
-    [SSZipArchive createZipFileAtPath:zipDumpPath withContentsOfDirectory:dumpPath];
+    if (shouldDump) {
+        [SSZipArchive createZipFileAtPath:zipDumpPath withContentsOfDirectory:dumpPath];
+        dismisWaiting(waitingAlert);
+    }
 
-    dismisWaiting(waitingAlert);
-
-    if (dumpStatus != Dumper::DumpStatus::SUCCESS) {
+    if (shouldDump && dumpStatus != Dumper::DumpStatus::SUCCESS) {
         showError(@"Error while dumping, check logs.txt");
         return;
+    }
+
+    if (shouldDump && dumpStatus == Dumper::DumpStatus::SUCCESS) {
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        [defaults setObject:dumpPath forKey:@"I2F.LastDumpDirectory"];
+
+        [I2FConfigManager setHasDumpedOnce:YES];
+
+        NSArray<NSString *> *allRvas = [I2FDumpRvaParser allSetTextRvaStringsInDumpDirectory:dumpPath];
+        if (allRvas.count > 0) {
+            [defaults setObject:allRvas forKey:@"I2F.SetTextRvaStrings"];
+            NSString *firstRva = allRvas.firstObject;
+            [defaults setObject:firstRva forKey:@"I2F.SetTextRvaString"];
+            [defaults synchronize];
+
+            [I2FIl2CppTextHookManager installHookWithBaseAddress:(unsigned long long)Variables::info.address
+                                                      rvaString:firstRva];
+        } else {
+            [defaults synchronize];
+        }
     }
 
     NSLog(@"[I2CppDumper] Dump finished.");
 
     dispatch_async(dispatch_get_main_queue(), ^{
-        showSuccess([NSString stringWithFormat:@"Dump at: \n%@\nFolder: %@", zipDumpPath, dumpPath]);
+        if (shouldDump) {
+            showSuccess([NSString stringWithFormat:@"Dump at: \n%@\nFolder: %@", zipDumpPath, dumpPath]);
+        }
     });
 }
 

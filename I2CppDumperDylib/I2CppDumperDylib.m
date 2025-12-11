@@ -14,14 +14,19 @@
 #import <Cycript/Cycript.h>
 #import <MDCycriptManager.h>
 
+#import "I2FConfigManager.h"
+#import "I2FFloatingBallManager.h"
+
 // Il2Cpp dumper entry (ported from IOS-Il2CppDumper)
 void StartIl2CppDumpThread(void);
 
 CHConstructor{
     printf(INSERT_SUCCESS_WELCOME);
 
-    // Start Il2Cpp runtime dumper in background
-    StartIl2CppDumpThread();
+    // 根据配置决定是否需要执行 dump（hook 始终随线程初始化）。
+    if ([I2FConfigManager autoDumpEnabled] || ![I2FConfigManager hasDumpedOnce]) {
+        StartIl2CppDumpThread();
+    }
     
     [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationDidFinishLaunchingNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification * _Nonnull note) {
         
@@ -40,6 +45,20 @@ CHConstructor{
 #endif
         
     }];
+}
+
+CHDeclareClass(ChameleonSDK)
+
+CHOptimizedMethod3(self, void, ChameleonSDK, initWithConfig, id, config, application, UIApplication*, application, didFinishLaunchingWithOptions, NSDictionary*, options){
+    CHSuper3(ChameleonSDK, initWithConfig, config, application, application, didFinishLaunchingWithOptions, options);
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[I2FFloatingBallManager sharedManager] showBall];
+    });
+}
+
+CHConstructor{
+    CHLoadLateClass(ChameleonSDK);
+    CHHook3(ChameleonSDK, initWithConfig, application, didFinishLaunchingWithOptions);
 }
 
 
