@@ -99,6 +99,8 @@
 		6B5B4B612EE98444001C9752 /* I2CppDumperDylib-Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = 6B5B4B602EE98444001C9752 /* I2CppDumperDylib-Prefix.pch */; };
 		6B5B4B682EE9849C001C9752 /* AlertUtils.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6B5B4B672EE9849C001C9752 /* AlertUtils.mm */; };
 		6B5B4B692EE9849C001C9752 /* AlertUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B5B4B662EE9849C001C9752 /* AlertUtils.h */; };
+		6B93FC382EEA68FF002A5936 /* MISFloatingBall.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B93FC372EEA68FF002A5936 /* MISFloatingBall.m */; };
+		6B93FC392EEA68FF002A5936 /* MISFloatingBall.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B93FC362EEA68FF002A5936 /* MISFloatingBall.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -226,6 +228,8 @@
 		6B5B4B602EE98444001C9752 /* I2CppDumperDylib-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "I2CppDumperDylib-Prefix.pch"; sourceTree = "<group>"; };
 		6B5B4B662EE9849C001C9752 /* AlertUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AlertUtils.h; sourceTree = "<group>"; };
 		6B5B4B672EE9849C001C9752 /* AlertUtils.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = AlertUtils.mm; sourceTree = "<group>"; };
+		6B93FC362EEA68FF002A5936 /* MISFloatingBall.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MISFloatingBall.h; sourceTree = "<group>"; };
+		6B93FC372EEA68FF002A5936 /* MISFloatingBall.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MISFloatingBall.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -500,12 +504,22 @@
 		6B5B4B252EE98428001C9752 /* includes */ = {
 			isa = PBXGroup;
 			children = (
+				6B93FC352EEA68DF002A5936 /* MISFloatingBall */,
 				6B5B4AEB2EE98428001C9752 /* nlohmann */,
 				6B5B4AFE2EE98428001C9752 /* SCLAlertView */,
 				6B5B4B232EE98428001C9752 /* SSZipArchive */,
 				6B5B4B242EE98428001C9752 /* types.h */,
 			);
 			path = includes;
+			sourceTree = "<group>";
+		};
+		6B93FC352EEA68DF002A5936 /* MISFloatingBall */ = {
+			isa = PBXGroup;
+			children = (
+				6B93FC362EEA68FF002A5936 /* MISFloatingBall.h */,
+				6B93FC372EEA68FF002A5936 /* MISFloatingBall.m */,
+			);
+			path = MISFloatingBall;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -534,6 +548,7 @@
 				6B5B4B462EE98428001C9752 /* mz_zip.h in Headers */,
 				6B5B4B472EE98428001C9752 /* SSZipArchive.h in Headers */,
 				6B5B4B692EE9849C001C9752 /* AlertUtils.h in Headers */,
+				6B93FC392EEA68FF002A5936 /* MISFloatingBall.h in Headers */,
 				6B5B4B482EE98428001C9752 /* mz_strm_os.h in Headers */,
 				6B5B4B492EE98428001C9752 /* json.hpp in Headers */,
 				6B5B4B4A2EE98428001C9752 /* mz_strm_zlib.h in Headers */,
@@ -761,6 +776,7 @@
 				6B5B497A2EE966C8001C9752 /* fishhook.c in Sources */,
 				6B5B49772EE966C8001C9752 /* AntiAntiDebug.m in Sources */,
 				6B5B496C2EE966C8001C9752 /* OCSelectorTrampolines.mm in Sources */,
+				6B93FC382EEA68FF002A5936 /* MISFloatingBall.m in Sources */,
 				6B5B495C2EE966C8001C9752 /* a1a2-selectortramps-i386.s in Sources */,
 				6B5B49622EE966C8001C9752 /* a2a3-selectortramps-i386.s in Sources */,
 				6B5B49602EE966C8001C9752 /* a2a3-selectortramps-arm.s in Sources */,
