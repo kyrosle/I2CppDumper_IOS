@@ -34,6 +34,22 @@ static NSArray<NSDictionary *> *I2FNormalizeHookEntries(NSArray<NSDictionary *> 
         if (rva.length > 0) {
             normalized[@"rva"] = rva;
         }
+        NSString *signature = entry[@"signature"];
+        if (signature.length > 0) {
+            normalized[@"signature"] = signature;
+        }
+        NSString *ns = entry[@"namespace"];
+        if (ns.length > 0) {
+            normalized[@"namespace"] = ns;
+        }
+        NSString *klass = entry[@"class"];
+        if (klass.length > 0) {
+            normalized[@"class"] = klass;
+        }
+        NSString *method = entry[@"method"];
+        if (method.length > 0) {
+            normalized[@"method"] = method;
+        }
         normalized[@"enabled"] = @(enabled);
         [result addObject:normalized];
     }

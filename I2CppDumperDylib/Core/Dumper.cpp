@@ -7,7 +7,12 @@ namespace Dumper {
     DumpStatus status = DumpStatus::NONE;
     std::string dumpDir = "";
     namespace SetText {
-        std::vector<std::pair<std::string, uint64_t>> entries;
+        struct Entry {
+            std::string name;
+            uint64_t rva;
+            std::string signature;
+        };
+        std::vector<Entry> entries;
     }  // namespace SetText
     namespace GenScript {
         json jsonData = json::object();
@@ -18,10 +23,19 @@ namespace Dumper {
 
 static void saveSetTextRvas(const std::string &dir) {
     json arr = json::array();
+    std::unordered_set<std::string> seen;
     for (const auto &entry : Dumper::SetText::entries) {
+        if (seen.find(entry.name) != seen.end()) {
+            continue;
+        }
+        seen.insert(entry.name);
         std::stringstream ss;
-        ss << "0x" << std::hex << std::uppercase << entry.second;
-        arr.push_back({{"name", entry.first}, {"rva", ss.str()}});
+        ss << "0x" << std::hex << std::uppercase << entry.rva;
+        json obj = {{"name", entry.name}, {"rva", ss.str()}};
+        if (!entry.signature.empty()) {
+            obj["signature"] = entry.signature;
+        }
+        arr.push_back(obj);
     }
 
     File out(dir + "/set_text_rvas.json", "w");
@@ -351,7 +365,41 @@ std::string Dumper::dumpMethod(void *klass) {
                         fullName = className + "." + methodName;
                     }
                     uint64_t rva = (uint64_t)methodPointer - Variables::info.address;
-                    Dumper::SetText::entries.push_back({fullName, rva});
+                    // 构建签名字符串，参考 dump 输出。
+                    std::stringstream sig;
+                    sig << getMethodModifier(flags);
+                    auto return_type_sig = Variables::IL2CPP::il2cpp_method_get_return_type(method);
+                    auto return_class_sig = Variables::IL2CPP::il2cpp_class_from_type(return_type_sig);
+                    sig << getClassName(return_class_sig) << " " << methodName << "(";
+                    for (int i = 0; i < param_count; ++i) {
+                        auto param = Variables::IL2CPP::il2cpp_method_get_param(method, i);
+                        auto attrs = Variables::IL2CPP::il2cpp_type_get_attrs(param);
+                        if (Variables::IL2CPP::il2cpp_type_is_byref(param)) {
+                            if (attrs & PARAM_ATTRIBUTE_OUT && !(attrs & PARAM_ATTRIBUTE_IN)) {
+                                sig << "out ";
+                            } else if (attrs & PARAM_ATTRIBUTE_IN && !(attrs & PARAM_ATTRIBUTE_OUT)) {
+                                sig << "in ";
+                            } else {
+                                sig << "ref ";
+                            }
+                        } else {
+                            if (attrs & PARAM_ATTRIBUTE_IN) {
+                                sig << "[In] ";
+                            }
+                            if (attrs & PARAM_ATTRIBUTE_OUT) {
+                                sig << "[Out] ";
+                            }
+                        }
+                        auto parameter_class = Variables::IL2CPP::il2cpp_class_from_type(param);
+                        sig << getClassName(parameter_class) << " "
+                            << Variables::IL2CPP::il2cpp_method_get_param_name(method, i);
+                        sig << ", ";
+                    }
+                    if (param_count > 0) {
+                        sig.seekp(-2, sig.cur);
+                    }
+                    sig << ") { }";
+                    Dumper::SetText::entries.push_back({fullName, rva, sig.str()});
                 }
             }
         }

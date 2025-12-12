@@ -450,16 +450,19 @@
             cell.textLabel.textColor = [UIColor whiteColor];
             cell.detailTextLabel.textColor = [UIColor lightGrayColor];
             cell.textLabel.font = [UIFont boldSystemFontOfSize:12];
-            cell.detailTextLabel.font = [UIFont systemFontOfSize:11];
+            cell.detailTextLabel.font = [UIFont systemFontOfSize:10];
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
             cell.textLabel.numberOfLines = 1;
-            cell.detailTextLabel.numberOfLines = 1;
+            cell.detailTextLabel.numberOfLines = 2;
         }
         NSDictionary *hook = self.hookEntries[indexPath.row];
         NSString *name = hook[@"name"];
         NSString *rva = hook[@"rva"] ?: @"";
+        NSString *signature = hook[@"signature"];
         cell.textLabel.text = name.length > 0 ? name : @"(未命名)";
-        if (rva.length > 0) {
+        if (signature.length > 0) {
+            cell.detailTextLabel.text = signature;
+        } else if (rva.length > 0) {
             cell.detailTextLabel.text = [NSString stringWithFormat:@"RVA: %@", rva];
         } else {
             cell.detailTextLabel.text = @"";
