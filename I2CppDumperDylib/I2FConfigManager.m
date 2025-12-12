@@ -5,8 +5,6 @@ static NSString *const kI2FHasDumpedOnceKey = @"I2F.HasDumpedOnce";
 static NSString *const kI2FAutoInstallHookOnLaunchKey = @"I2F.AutoInstallHookOnLaunch";
 static NSString *const kI2FAutoInstallHookAfterDumpKey = @"I2F.AutoInstallHookAfterDump";
 static NSString *const kI2FLastDumpDirectoryKey = @"I2F.LastDumpDirectory";
-static NSString *const kI2FSetTextRvaStringsKey = @"I2F.SetTextRvaStrings";
-static NSString *const kI2FPrimarySetTextRvaStringKey = @"I2F.SetTextRvaString";
 static NSString *const kI2FSetTextHookEntriesKey = @"I2F.SetTextHookEntries";
 static NSString *const kI2FLastInstallingHookEntryKey = @"I2F.LastInstallingHookEntry";
 
@@ -15,26 +13,26 @@ static NSArray<NSDictionary *> *I2FNormalizeHookEntries(NSArray<NSDictionary *> 
         return @[];
     }
     NSMutableArray<NSDictionary *> *result = [NSMutableArray array];
-    NSMutableSet<NSString *> *seen = [NSMutableSet set];
+    NSMutableSet<NSString *> *seenNames = [NSMutableSet set];
     for (NSDictionary *entry in entries) {
-        NSString *rva = entry[@"rva"];
-        if (rva.length == 0) {
+        NSString *name = entry[@"name"];
+        if (name.length == 0) {
             continue;
         }
-        if ([seen containsObject:rva]) {
+        if ([seenNames containsObject:name]) {
             continue;
         }
-        [seen addObject:rva];
+        [seenNames addObject:name];
         BOOL enabled = YES;
         id enabledObj = entry[@"enabled"];
         if ([enabledObj respondsToSelector:@selector(boolValue)]) {
             enabled = [enabledObj boolValue];
         }
-        NSString *name = entry[@"name"];
         NSMutableDictionary *normalized = [NSMutableDictionary dictionary];
-        normalized[@"rva"] = rva;
-        if (name.length > 0) {
-            normalized[@"name"] = name;
+        normalized[@"name"] = name;
+        NSString *rva = entry[@"rva"];
+        if (rva.length > 0) {
+            normalized[@"rva"] = rva;
         }
         normalized[@"enabled"] = @(enabled);
         [result addObject:normalized];
@@ -116,35 +114,6 @@ static NSArray<NSDictionary *> *I2FNormalizeHookEntries(NSArray<NSDictionary *> 
         [defaults setObject:path forKey:kI2FLastDumpDirectoryKey];
     } else {
         [defaults removeObjectForKey:kI2FLastDumpDirectoryKey];
-    }
-    [defaults synchronize];
-}
-
-+ (NSArray<NSString *> *)setTextRvaStrings {
-    NSArray<NSString *> *value = [[self defaults] arrayForKey:kI2FSetTextRvaStringsKey];
-    return value ?: @[];
-}
-
-+ (void)setSetTextRvaStrings:(NSArray<NSString *> *)rvas {
-    NSUserDefaults *defaults = [self defaults];
-    if (rvas.count > 0) {
-        [defaults setObject:rvas forKey:kI2FSetTextRvaStringsKey];
-    } else {
-        [defaults removeObjectForKey:kI2FSetTextRvaStringsKey];
-    }
-    [defaults synchronize];
-}
-
-+ (nullable NSString *)primarySetTextRvaString {
-    return [[self defaults] stringForKey:kI2FPrimarySetTextRvaStringKey];
-}
-
-+ (void)setPrimarySetTextRvaString:(nullable NSString *)rva {
-    NSUserDefaults *defaults = [self defaults];
-    if (rva.length > 0) {
-        [defaults setObject:rva forKey:kI2FPrimarySetTextRvaStringKey];
-    } else {
-        [defaults removeObjectForKey:kI2FPrimarySetTextRvaStringKey];
     }
     [defaults synchronize];
 }

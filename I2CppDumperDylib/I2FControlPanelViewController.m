@@ -6,8 +6,6 @@
 #import "I2FIl2CppTextHookManager.h"
 #import "includes/SDAutoLayout/SDAutoLayout.h"
 
-extern unsigned long long I2FCurrentIl2CppBaseAddress(void);
-
 @interface I2FControlPanelViewController () <UITableViewDataSource, UITableViewDelegate>
 
 @property (nonatomic, strong) UIView *containerView;
@@ -27,7 +25,6 @@ extern unsigned long long I2FCurrentIl2CppBaseAddress(void);
 @property (nonatomic, strong) UITableView *hookTableView;
 @property (nonatomic, strong) UITableView *tableView;
 
-@property (nonatomic, copy) NSString *currentRvaString;
 @property (nonatomic, strong) NSArray<I2FTextLogEntry *> *entries;
 @property (nonatomic, strong) NSArray<NSDictionary *> *hookEntries;
 
@@ -324,12 +321,11 @@ extern unsigned long long I2FCurrentIl2CppBaseAddress(void);
 
 - (void)reloadData {
     self.entries = [[I2FTextLogManager sharedManager] allEntries];
-    NSString *storedRva = [I2FConfigManager primarySetTextRvaString];
     NSArray<NSDictionary *> *entries = [I2FConfigManager setTextHookEntries];
     self.hookEntries = entries;
-    self.currentRvaString = storedRva ?: @"未解析";
     if (entries.count > 0) {
-        self.rvaLabel.text = [NSString stringWithFormat:@"当前 set_Text hook: %@ 等 %lu 个", self.currentRvaString, (unsigned long)entries.count];
+        NSString *firstName = entries.firstObject[@"name"] ?: @"(未命名)";
+        self.rvaLabel.text = [NSString stringWithFormat:@"当前 set_Text hook: %@ 等 %lu 个", firstName, (unsigned long)entries.count];
     } else {
         self.rvaLabel.text = @"当前 set_Text hook: 未配置";
     }
@@ -369,8 +365,6 @@ extern unsigned long long I2FCurrentIl2CppBaseAddress(void);
         return;
     }
     NSDictionary *entry = self.hookEntries[row];
-    NSString *rva = entry[@"rva"];
-    unsigned long long base = I2FCurrentIl2CppBaseAddress();
     BOOL enabled = sender.isOn;
 
     // 更新存储
@@ -382,12 +376,10 @@ extern unsigned long long I2FCurrentIl2CppBaseAddress(void);
     self.hookEntries = [I2FConfigManager setTextHookEntries];
 
     // 运行时安装/卸载（若 base 已知）
-    if (rva.length > 0 && base != 0) {
-        if (enabled) {
-            [I2FIl2CppTextHookManager installHooksWithBaseAddress:base entries:@[mutableEntry]];
-        } else {
-            [I2FIl2CppTextHookManager uninstallHooksWithBaseAddress:base entries:@[mutableEntry]];
-        }
+    if (enabled) {
+        [I2FIl2CppTextHookManager installHooksWithEntries:@[mutableEntry]];
+    } else {
+        [I2FIl2CppTextHookManager uninstallHooksWithEntries:@[mutableEntry]];
     }
 
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -413,8 +405,6 @@ extern unsigned long long I2FCurrentIl2CppBaseAddress(void);
 
 - (void)clearHookTapped {
     [I2FConfigManager setSetTextHookEntries:@[]];
-    [I2FConfigManager setSetTextRvaStrings:@[]];
-    [I2FConfigManager setPrimarySetTextRvaString:nil];
     [self reloadData];
 }
 
@@ -436,21 +426,7 @@ extern unsigned long long I2FCurrentIl2CppBaseAddress(void);
     }
 
     [I2FConfigManager setSetTextHookEntries:entries];
-    NSMutableArray<NSString *> *rvas = [NSMutableArray array];
-    for (NSDictionary *item in entries) {
-        NSString *rva = item[@"rva"];
-        if (rva.length > 0) {
-            [rvas addObject:rva];
-        }
-    }
-    [I2FConfigManager setSetTextRvaStrings:rvas];
-    [I2FConfigManager setPrimarySetTextRvaString:rvas.firstObject];
-
-    extern unsigned long long I2FCurrentIl2CppBaseAddress(void);
-    unsigned long long base = I2FCurrentIl2CppBaseAddress();
-    if (base != 0) {
-        [I2FIl2CppTextHookManager installHooksWithBaseAddress:base entries:entries];
-    }
+    [I2FIl2CppTextHookManager installHooksWithEntries:entries];
 
     [self reloadData];
 }
@@ -483,7 +459,11 @@ extern unsigned long long I2FCurrentIl2CppBaseAddress(void);
         NSString *name = hook[@"name"];
         NSString *rva = hook[@"rva"] ?: @"";
         cell.textLabel.text = name.length > 0 ? name : @"(未命名)";
-        cell.detailTextLabel.text = [NSString stringWithFormat:@"RVA: %@", rva];
+        if (rva.length > 0) {
+            cell.detailTextLabel.text = [NSString stringWithFormat:@"RVA: %@", rva];
+        } else {
+            cell.detailTextLabel.text = @"";
+        }
         UISwitch *toggle = nil;
         if ([cell.accessoryView isKindOfClass:[UISwitch class]]) {
             toggle = (UISwitch *)cell.accessoryView;
@@ -513,7 +493,8 @@ extern unsigned long long I2FCurrentIl2CppBaseAddress(void);
     NSDateFormatter *fmt = [[NSDateFormatter alloc] init];
     fmt.dateFormat = @"HH:mm:ss";
     NSString *time = [fmt stringFromDate:entry.timestamp];
-    cell.detailTextLabel.text = [NSString stringWithFormat:@"[%@] RVA: %@", time, entry.rvaString];
+    NSString *label = entry.rvaString.length > 0 ? entry.rvaString : @"(未知方法)";
+    cell.detailTextLabel.text = [NSString stringWithFormat:@"[%@] %@", time, label];
     return cell;
 }
 

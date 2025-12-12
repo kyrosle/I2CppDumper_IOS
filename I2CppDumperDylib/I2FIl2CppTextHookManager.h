@@ -2,28 +2,20 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/// 安装基于 RVA 的 Unity Text.set_text hook。
+/// 按名称解析并安装 Unity Text.set_text hook（不再依赖 base + RVA）。
 @interface I2FIl2CppTextHookManager : NSObject
 
-/// 使用基址和单个 RVA 字符串安装 hook（便捷调用，会转到多 RVA 接口）。
-+ (void)installHookWithBaseAddress:(unsigned long long)baseAddress
-                        rvaString:(nullable NSString *)rvaString;
+/// 使用名称字符串列表安装 hook，名称格式：Namespace.Class.set_Text
++ (void)installHooksWithNames:(NSArray<NSString *> *)names;
 
-/// 使用基址和多个 RVA 字符串安装 hook，会对每个 RVA 对应的地址做 inline hook。
-+ (void)installHooksWithBaseAddress:(unsigned long long)baseAddress
-                         rvaStrings:(NSArray<NSString *> *)rvaStrings;
+/// 使用带 name 的条目安装 hook，entry 需包含 @"name"。
++ (void)installHooksWithEntries:(NSArray<NSDictionary *> *)entries;
 
-/// 使用基址和带 name 的条目安装 hook，entry 包含 @"rva" 必填（十六进制字符串），@"name" 可选。
-+ (void)installHooksWithBaseAddress:(unsigned long long)baseAddress
-                            entries:(NSArray<NSDictionary *> *)entries;
+/// 卸载指定名称对应的 hook。
++ (void)uninstallHooksWithEntries:(NSArray<NSDictionary *> *)entries;
 
-/// 卸载指定条目的 hook（按基址 + RVA 定位）。
-+ (void)uninstallHooksWithBaseAddress:(unsigned long long)baseAddress
-                              entries:(NSArray<NSDictionary *> *)entries;
-
-/// 查询指定 RVA 是否已安装 hook。
-+ (BOOL)isHookInstalledWithBaseAddress:(unsigned long long)baseAddress
-                             rvaString:(NSString *)rvaString;
+/// 查询指定 name 是否已安装 hook。
++ (BOOL)isHookInstalledWithName:(NSString *)name;
 
 @end
 

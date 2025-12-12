@@ -25,8 +25,8 @@ static void I2FHandlePreviousHookCrashMarker(void) {
     if (!lastEntry) {
         return;
     }
-    NSString *rva = lastEntry[@"rva"];
-    if (rva.length == 0) {
+    NSString *name = lastEntry[@"name"];
+    if (name.length == 0) {
         [I2FConfigManager setLastInstallingHookEntry:nil];
         return;
     }
@@ -35,7 +35,7 @@ static void I2FHandlePreviousHookCrashMarker(void) {
     BOOL changed = NO;
     for (NSUInteger i = 0; i < entries.count; i++) {
         NSDictionary *entry = entries[i];
-        if ([rva isEqualToString:entry[@"rva"]]) {
+        if ([name isEqualToString:entry[@"name"]]) {
             NSMutableDictionary *m = [entry mutableCopy];
             m[@"enabled"] = @NO;
             entries[i] = [m copy];
@@ -44,18 +44,13 @@ static void I2FHandlePreviousHookCrashMarker(void) {
     }
     if (changed) {
         [I2FConfigManager setSetTextHookEntries:entries];
-        showInfo([NSString stringWithFormat:@"上次安装 hook 可能崩溃，已禁用 RVA %@", rva], 2.0f);
+        showInfo([NSString stringWithFormat:@"上次安装 hook 可能崩溃，已禁用 %@", name], 2.0f);
     }
     [I2FConfigManager setLastInstallingHookEntry:nil];
 }
 
 static void I2FInstallSetTextHooksFromConfig(void) {
     if (![I2FConfigManager autoInstallHookOnLaunch] && ![I2FConfigManager autoInstallHookAfterDump]) {
-        return;
-    }
-
-    unsigned long long base = (unsigned long long)Variables::info.address;
-    if (base == 0) {
         return;
     }
 
@@ -75,7 +70,7 @@ static void I2FInstallSetTextHooksFromConfig(void) {
     if (enabledEntries.count == 0) {
         return;
     }
-    [I2FIl2CppTextHookManager installHooksWithBaseAddress:base entries:enabledEntries];
+    [I2FIl2CppTextHookManager installHooksWithEntries:enabledEntries];
 }
 
 static BOOL I2FPerformDumpIfNeeded(BOOL shouldDump,

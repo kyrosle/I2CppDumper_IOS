@@ -116,6 +116,10 @@ namespace Variables
         extern bool (*il2cpp_type_is_byref)(void *type);
         extern uint32_t (*il2cpp_type_get_attrs)(void *type);
 
+        // thread
+        extern void *(*il2cpp_thread_attach)(void *domain);
+        extern bool (*il2cpp_is_vm_thread)(void *thread);
+
         void processAttach(const char *unitydir);
     }
 

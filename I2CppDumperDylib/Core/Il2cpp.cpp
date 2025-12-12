@@ -78,6 +78,9 @@ namespace Variables {
         bool (*il2cpp_type_is_byref)(void *type) = nullptr;
         uint32_t (*il2cpp_type_get_attrs)(void *type) = nullptr;
 
+        void *(*il2cpp_thread_attach)(void *domain) = nullptr;
+        bool (*il2cpp_is_vm_thread)(void *thread) = nullptr;
+
 
         void processAttach(const char *dir) {
         #define GETAPI(returnType, name, ...)                                           \
@@ -144,6 +147,10 @@ namespace Variables {
             GETAPI(char *, il2cpp_type_get_name, void *);
             GETAPI(bool, il2cpp_type_is_byref, void *);
             GETAPI(uint32_t, il2cpp_type_get_attrs, void *);
+
+            // thread (optional on some versions)
+            Variables::IL2CPP::il2cpp_thread_attach = (void *(*)(void *))dlsym(handle, "il2cpp_thread_attach");
+            Variables::IL2CPP::il2cpp_is_vm_thread = (bool (*)(void *))dlsym(handle, "il2cpp_is_vm_thread");
         }
     }  // namespace IL2CPP
 }  // namespace Variables

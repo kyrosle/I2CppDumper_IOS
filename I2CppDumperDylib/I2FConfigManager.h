@@ -33,12 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// 记录最近一次 dump 生成的目录路径。
 + (void)setLastDumpDirectory:(nullable NSString *)path;
 
-/// 解析到的所有 set_Text RVA（去重后的十六进制字符串，如 0x1234）。
-+ (NSArray<NSString *> *)setTextRvaStrings;
-/// 存储解析到的 set_Text RVA 列表。
-+ (void)setSetTextRvaStrings:(NSArray<NSString *> *)rvas;
-
-/// set_Text hook 条目（字典，包含 name 可选、rva 必填，rva 为十六进制字符串如 0x1234）。
+/// set_Text hook 条目（字典，包含 name，name 形如 Namespace.Class.set_Text）。
 + (NSArray<NSDictionary *> *)setTextHookEntries;
 /// 存储 set_Text hook 条目。
 + (void)setSetTextHookEntries:(NSArray<NSDictionary *> *)entries;
@@ -46,11 +41,6 @@ NS_ASSUME_NONNULL_BEGIN
 /// 上一次正在安装的 hook 条目（用于崩溃检测）。
 + (nullable NSDictionary *)lastInstallingHookEntry;
 + (void)setLastInstallingHookEntry:(nullable NSDictionary *)entry;
-
-/// 首选的 set_Text RVA 字符串（通常是列表第一个）。
-+ (nullable NSString *)primarySetTextRvaString;
-/// 设置首选的 set_Text RVA 字符串。
-+ (void)setPrimarySetTextRvaString:(nullable NSString *)rva;
 
 @end
 
