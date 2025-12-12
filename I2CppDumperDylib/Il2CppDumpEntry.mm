@@ -20,6 +20,35 @@ extern "C" unsigned long long I2FCurrentIl2CppBaseAddress(void) {
     return (unsigned long long)Variables::info.address;
 }
 
+static void I2FHandlePreviousHookCrashMarker(void) {
+    NSDictionary *lastEntry = [I2FConfigManager lastInstallingHookEntry];
+    if (!lastEntry) {
+        return;
+    }
+    NSString *rva = lastEntry[@"rva"];
+    if (rva.length == 0) {
+        [I2FConfigManager setLastInstallingHookEntry:nil];
+        return;
+    }
+
+    NSMutableArray<NSDictionary *> *entries = [[I2FConfigManager setTextHookEntries] mutableCopy];
+    BOOL changed = NO;
+    for (NSUInteger i = 0; i < entries.count; i++) {
+        NSDictionary *entry = entries[i];
+        if ([rva isEqualToString:entry[@"rva"]]) {
+            NSMutableDictionary *m = [entry mutableCopy];
+            m[@"enabled"] = @NO;
+            entries[i] = [m copy];
+            changed = YES;
+        }
+    }
+    if (changed) {
+        [I2FConfigManager setSetTextHookEntries:entries];
+        showInfo([NSString stringWithFormat:@"上次安装 hook 可能崩溃，已禁用 RVA %@", rva], 2.0f);
+    }
+    [I2FConfigManager setLastInstallingHookEntry:nil];
+}
+
 static void I2FInstallSetTextHooksFromConfig(void) {
     if (![I2FConfigManager autoInstallHookOnLaunch] && ![I2FConfigManager autoInstallHookAfterDump]) {
         return;
@@ -31,10 +60,22 @@ static void I2FInstallSetTextHooksFromConfig(void) {
     }
 
     NSArray<NSDictionary *> *entries = [I2FConfigManager setTextHookEntries];
-    if (entries.count == 0) {
+    NSMutableArray<NSDictionary *> *enabledEntries = [NSMutableArray array];
+    for (NSDictionary *entry in entries) {
+        BOOL enabled = YES;
+        id enabledObj = entry[@"enabled"];
+        if ([enabledObj respondsToSelector:@selector(boolValue)]) {
+            enabled = [enabledObj boolValue];
+        }
+        if (enabled) {
+            [enabledEntries addObject:entry];
+        }
+    }
+
+    if (enabledEntries.count == 0) {
         return;
     }
-    [I2FIl2CppTextHookManager installHooksWithBaseAddress:base entries:entries];
+    [I2FIl2CppTextHookManager installHooksWithBaseAddress:base entries:enabledEntries];
 }
 
 static BOOL I2FPerformDumpIfNeeded(BOOL shouldDump,
@@ -129,6 +170,8 @@ static void dump_thread(void) {
     }
 
     Variables::IL2CPP::processAttach(binaryPath.UTF8String);
+
+    I2FHandlePreviousHookCrashMarker();
 
     if (Dumper::status != Dumper::DumpStatus::SUCCESS) {
         if (Dumper::status == Dumper::DumpStatus::ERROR_FRAMEWORK) {

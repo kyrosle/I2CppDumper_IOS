@@ -6,6 +6,8 @@
 #import "I2FIl2CppTextHookManager.h"
 #import "includes/SDAutoLayout/SDAutoLayout.h"
 
+extern unsigned long long I2FCurrentIl2CppBaseAddress(void);
+
 @interface I2FControlPanelViewController () <UITableViewDataSource, UITableViewDelegate>
 
 @property (nonatomic, strong) UIView *containerView;
@@ -353,6 +355,46 @@
     });
 }
 
+- (BOOL)isHookActiveForEntry:(NSDictionary *)entry {
+    id enabledObj = entry[@"enabled"];
+    if ([enabledObj respondsToSelector:@selector(boolValue)]) {
+        return [enabledObj boolValue];
+    }
+    return YES;
+}
+
+- (void)hookSwitchChanged:(UISwitch *)sender {
+    NSInteger row = sender.tag;
+    if (row < 0 || row >= (NSInteger)self.hookEntries.count) {
+        return;
+    }
+    NSDictionary *entry = self.hookEntries[row];
+    NSString *rva = entry[@"rva"];
+    unsigned long long base = I2FCurrentIl2CppBaseAddress();
+    BOOL enabled = sender.isOn;
+
+    // 更新存储
+    NSMutableArray<NSDictionary *> *updated = [self.hookEntries mutableCopy];
+    NSMutableDictionary *mutableEntry = [entry mutableCopy];
+    mutableEntry[@"enabled"] = @(enabled);
+    updated[row] = [mutableEntry copy];
+    [I2FConfigManager setSetTextHookEntries:updated];
+    self.hookEntries = [I2FConfigManager setTextHookEntries];
+
+    // 运行时安装/卸载（若 base 已知）
+    if (rva.length > 0 && base != 0) {
+        if (enabled) {
+            [I2FIl2CppTextHookManager installHooksWithBaseAddress:base entries:@[mutableEntry]];
+        } else {
+            [I2FIl2CppTextHookManager uninstallHooksWithBaseAddress:base entries:@[mutableEntry]];
+        }
+    }
+
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.hookTableView reloadData];
+    });
+}
+
 - (void)autoDumpSwitchChanged:(UISwitch *)sender {
     [I2FConfigManager setAutoDumpEnabled:sender.isOn];
 }
@@ -442,6 +484,17 @@
         NSString *rva = hook[@"rva"] ?: @"";
         cell.textLabel.text = name.length > 0 ? name : @"(未命名)";
         cell.detailTextLabel.text = [NSString stringWithFormat:@"RVA: %@", rva];
+        UISwitch *toggle = nil;
+        if ([cell.accessoryView isKindOfClass:[UISwitch class]]) {
+            toggle = (UISwitch *)cell.accessoryView;
+        } else {
+            toggle = [[UISwitch alloc] initWithFrame:CGRectZero];
+            cell.accessoryView = toggle;
+        }
+        toggle.tag = indexPath.row;
+        [toggle removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
+        [toggle addTarget:self action:@selector(hookSwitchChanged:) forControlEvents:UIControlEventValueChanged];
+        toggle.on = [self isHookActiveForEntry:hook];
         return cell;
     }
 

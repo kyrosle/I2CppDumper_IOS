@@ -17,6 +17,14 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)installHooksWithBaseAddress:(unsigned long long)baseAddress
                             entries:(NSArray<NSDictionary *> *)entries;
 
+/// 卸载指定条目的 hook（按基址 + RVA 定位）。
++ (void)uninstallHooksWithBaseAddress:(unsigned long long)baseAddress
+                              entries:(NSArray<NSDictionary *> *)entries;
+
+/// 查询指定 RVA 是否已安装 hook。
++ (BOOL)isHookInstalledWithBaseAddress:(unsigned long long)baseAddress
+                             rvaString:(NSString *)rvaString;
+
 @end
 
 NS_ASSUME_NONNULL_END

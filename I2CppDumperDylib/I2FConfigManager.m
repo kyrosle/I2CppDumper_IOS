@@ -8,6 +8,39 @@ static NSString *const kI2FLastDumpDirectoryKey = @"I2F.LastDumpDirectory";
 static NSString *const kI2FSetTextRvaStringsKey = @"I2F.SetTextRvaStrings";
 static NSString *const kI2FPrimarySetTextRvaStringKey = @"I2F.SetTextRvaString";
 static NSString *const kI2FSetTextHookEntriesKey = @"I2F.SetTextHookEntries";
+static NSString *const kI2FLastInstallingHookEntryKey = @"I2F.LastInstallingHookEntry";
+
+static NSArray<NSDictionary *> *I2FNormalizeHookEntries(NSArray<NSDictionary *> *entries) {
+    if (entries.count == 0) {
+        return @[];
+    }
+    NSMutableArray<NSDictionary *> *result = [NSMutableArray array];
+    NSMutableSet<NSString *> *seen = [NSMutableSet set];
+    for (NSDictionary *entry in entries) {
+        NSString *rva = entry[@"rva"];
+        if (rva.length == 0) {
+            continue;
+        }
+        if ([seen containsObject:rva]) {
+            continue;
+        }
+        [seen addObject:rva];
+        BOOL enabled = YES;
+        id enabledObj = entry[@"enabled"];
+        if ([enabledObj respondsToSelector:@selector(boolValue)]) {
+            enabled = [enabledObj boolValue];
+        }
+        NSString *name = entry[@"name"];
+        NSMutableDictionary *normalized = [NSMutableDictionary dictionary];
+        normalized[@"rva"] = rva;
+        if (name.length > 0) {
+            normalized[@"name"] = name;
+        }
+        normalized[@"enabled"] = @(enabled);
+        [result addObject:normalized];
+    }
+    return result;
+}
 
 @implementation I2FConfigManager
 
@@ -118,15 +151,31 @@ static NSString *const kI2FSetTextHookEntriesKey = @"I2F.SetTextHookEntries";
 
 + (NSArray<NSDictionary *> *)setTextHookEntries {
     NSArray<NSDictionary *> *value = [[self defaults] arrayForKey:kI2FSetTextHookEntriesKey];
-    return value ?: @[];
+    return I2FNormalizeHookEntries(value ?: @[]);
 }
 
 + (void)setSetTextHookEntries:(NSArray<NSDictionary *> *)entries {
+    NSArray<NSDictionary *> *deduped = I2FNormalizeHookEntries(entries);
     NSUserDefaults *defaults = [self defaults];
-    if (entries.count > 0) {
-        [defaults setObject:entries forKey:kI2FSetTextHookEntriesKey];
+    if (deduped.count > 0) {
+        [defaults setObject:deduped forKey:kI2FSetTextHookEntriesKey];
     } else {
         [defaults removeObjectForKey:kI2FSetTextHookEntriesKey];
+    }
+    [defaults synchronize];
+}
+
++ (nullable NSDictionary *)lastInstallingHookEntry {
+    NSDictionary *entry = [[self defaults] dictionaryForKey:kI2FLastInstallingHookEntryKey];
+    return entry;
+}
+
++ (void)setLastInstallingHookEntry:(nullable NSDictionary *)entry {
+    NSUserDefaults *defaults = [self defaults];
+    if (entry) {
+        [defaults setObject:entry forKey:kI2FLastInstallingHookEntryKey];
+    } else {
+        [defaults removeObjectForKey:kI2FLastInstallingHookEntryKey];
     }
     [defaults synchronize];
 }

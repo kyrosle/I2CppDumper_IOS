@@ -43,6 +43,10 @@ NS_ASSUME_NONNULL_BEGIN
 /// 存储 set_Text hook 条目。
 + (void)setSetTextHookEntries:(NSArray<NSDictionary *> *)entries;
 
+/// 上一次正在安装的 hook 条目（用于崩溃检测）。
++ (nullable NSDictionary *)lastInstallingHookEntry;
++ (void)setLastInstallingHookEntry:(nullable NSDictionary *)entry;
+
 /// 首选的 set_Text RVA 字符串（通常是列表第一个）。
 + (nullable NSString *)primarySetTextRvaString;
 /// 设置首选的 set_Text RVA 字符串。
