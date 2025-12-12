@@ -5,17 +5,11 @@ NS_ASSUME_NONNULL_BEGIN
 /// 按名称解析并安装 Unity Text.set_text hook（不再依赖 base + RVA）。
 @interface I2FIl2CppTextHookManager : NSObject
 
-/// 使用名称字符串列表安装 hook，名称格式：Namespace.Class.set_Text
-+ (void)installHooksWithNames:(NSArray<NSString *> *)names;
-
 /// 使用带 name 的条目安装 hook，entry 需包含 @"name"。
 + (void)installHooksWithEntries:(NSArray<NSDictionary *> *)entries;
 
 /// 卸载指定名称对应的 hook。
 + (void)uninstallHooksWithEntries:(NSArray<NSDictionary *> *)entries;
-
-/// 查询指定 name 是否已安装 hook。
-+ (BOOL)isHookInstalledWithName:(NSString *)name;
 
 @end
 

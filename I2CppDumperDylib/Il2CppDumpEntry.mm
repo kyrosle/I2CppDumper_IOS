@@ -14,10 +14,44 @@
 
 #import "I2FConfigManager.h"
 #import "I2FDumpRvaParser.h"
+#import "I2FSetTextExtractor.h"
 #import "I2FIl2CppTextHookManager.h"
+
+static dispatch_once_t gIl2cppAttachOnce;
+static dispatch_queue_t gIl2cppWorkerQueue;
 
 extern "C" unsigned long long I2FCurrentIl2CppBaseAddress(void) {
     return (unsigned long long)Variables::info.address;
+}
+
+static void I2FAttachIl2cppIfNeeded(void) {
+    dispatch_once(&gIl2cppAttachOnce, ^{
+        NSString *appPath = [[NSBundle mainBundle] bundlePath];
+        NSString *binaryPath = [NSString stringWithUTF8String:BINARY_NAME];
+        if ([binaryPath isEqualToString:@"UnityFramework"]) {
+            binaryPath = [appPath stringByAppendingPathComponent:@"Frameworks/UnityFramework.framework/UnityFramework"];
+        } else {
+            binaryPath = [appPath stringByAppendingPathComponent:binaryPath];
+        }
+        Variables::IL2CPP::processAttach(binaryPath.UTF8String);
+    });
+}
+
+static BOOL I2FWaitIl2cppReady(NSUInteger retryCount, NSTimeInterval interval) {
+    for (NSUInteger i = 0; i < retryCount; i++) {
+        if (Variables::IL2CPP::il2cpp_domain_get && Variables::IL2CPP::il2cpp_domain_get_assemblies) {
+            void *domain = Variables::IL2CPP::il2cpp_domain_get();
+            if (domain) {
+                size_t count = 0;
+                Variables::IL2CPP::il2cpp_domain_get_assemblies(domain, &count);
+                if (count > 0) {
+                    return YES;
+                }
+            }
+        }
+        [NSThread sleepForTimeInterval:interval];
+    }
+    return NO;
 }
 
 static void I2FHandlePreviousHookCrashMarker(void) {
@@ -73,14 +107,9 @@ static void I2FInstallSetTextHooksFromConfig(void) {
     [I2FIl2CppTextHookManager installHooksWithEntries:enabledEntries];
 }
 
-static BOOL I2FPerformDumpIfNeeded(BOOL shouldDump,
-                                   NSString *dumpPath,
-                                   NSString *headersDumpPath,
-                                   NSString *zipDumpPath) {
-    if (!shouldDump) {
-        return YES;
-    }
-
+static BOOL I2FPerformDump(NSString *dumpPath,
+                           NSString *headersDumpPath,
+                           NSString *zipDumpPath) {
     NSFileManager *fileManager = [NSFileManager defaultManager];
 
     if ([fileManager fileExistsAtPath:dumpPath]) {
@@ -119,13 +148,9 @@ static BOOL I2FPerformDumpIfNeeded(BOOL shouldDump,
     [I2FConfigManager setLastDumpDirectory:dumpPath];
     [I2FConfigManager setHasDumpedOnce:YES];
 
-    NSArray<NSDictionary *> *entries = [I2FDumpRvaParser allSetTextEntriesInDumpDirectory:dumpPath];
+    NSArray<NSDictionary *> *entries = [I2FSetTextExtractor extractEntriesAtDumpPath:dumpPath writeJSONFile:YES];
     if (entries.count > 0) {
         [I2FConfigManager setSetTextHookEntries:entries];
-
-        if ([I2FConfigManager autoInstallHookAfterDump]) {
-            I2FInstallSetTextHooksFromConfig();
-        }
     } else {
         [I2FConfigManager setSetTextHookEntries:@[]];
     }
@@ -137,13 +162,8 @@ static BOOL I2FPerformDumpIfNeeded(BOOL shouldDump,
     return YES;
 }
 
-static void dump_thread(void) {
-    BOOL shouldDump = [I2FConfigManager autoDumpEnabled] || ![I2FConfigManager hasDumpedOnce];
-
-    if (shouldDump) {
-        showInfo([NSString stringWithFormat:@"Dumping after %d seconds.", WAIT_TIME_SEC], WAIT_TIME_SEC / 2.0f);
-    }
-
+static BOOL I2FRunDumpSequence(void) {
+    showInfo([NSString stringWithFormat:@"Dumping after %d seconds.", WAIT_TIME_SEC], WAIT_TIME_SEC / 2.0f);
     sleep(WAIT_TIME_SEC);
 
     NSString *docDir = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
@@ -156,49 +176,77 @@ static void dump_thread(void) {
     NSString *headersDumpPath = [dumpPath stringByAppendingPathComponent:@"Assembly"];
     NSString *zipDumpPath = [dumpPath stringByAppendingString:@".zip"];
 
-    NSString *appPath = [[NSBundle mainBundle] bundlePath];
-    NSString *binaryPath = [NSString stringWithUTF8String:BINARY_NAME];
-    if ([binaryPath isEqualToString:@"UnityFramework"]) {
-        binaryPath = [appPath stringByAppendingPathComponent:@"Frameworks/UnityFramework.framework/UnityFramework"];
-    } else {
-        binaryPath = [appPath stringByAppendingPathComponent:binaryPath];
+    if (!I2FWaitIl2cppReady(50, 0.1)) {
+        NSLog(@"[I2CppDumper] Dump worker skip: IL2CPP not ready.");
+        return NO;
     }
-
-    Variables::IL2CPP::processAttach(binaryPath.UTF8String);
-
-    I2FHandlePreviousHookCrashMarker();
 
     if (Dumper::status != Dumper::DumpStatus::SUCCESS) {
         if (Dumper::status == Dumper::DumpStatus::ERROR_FRAMEWORK) {
             showError(@"Error while dumping, error framework");
-            return;
+            return NO;
         }
         if (Dumper::status == Dumper::DumpStatus::ERROR_SYMBOLS) {
             showError(@"Error while dumping, error symbols");
-            return;
+            return NO;
         }
-    }
-
-    // 先基于已有配置安装 hook（即便本次不 dump 也可工作），受 autoInstallHookOnLaunch 控制。
-    if ([I2FConfigManager autoInstallHookOnLaunch]) {
-        I2FInstallSetTextHooksFromConfig();
     }
 
     NSLog(@"[I2CppDumper] UNITY_PATH: %@", dumpPath);
 
-    BOOL ok = I2FPerformDumpIfNeeded(shouldDump, dumpPath, headersDumpPath, zipDumpPath);
-    if (!ok) {
-        return;
+    BOOL ok = I2FPerformDump(dumpPath, headersDumpPath, zipDumpPath);
+    if (ok) {
+        NSLog(@"[I2CppDumper] Dump finished.");
     }
-
-    NSLog(@"[I2CppDumper] Dump finished.");
+    return ok;
 }
 
 extern "C" void StartIl2CppDumpThread(void) {
-    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-    dispatch_async(queue, ^{
-        NSLog(@"[I2CppDumper] ========= START DUMPER =========");
-        dump_thread();
-        NSLog(@"[I2CppDumper] ========= END DUMPER =========");
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        gIl2cppWorkerQueue = dispatch_queue_create("com.i2cpp.worker", DISPATCH_QUEUE_SERIAL);
+    });
+
+    dispatch_async(gIl2cppWorkerQueue, ^{
+        NSLog(@"[I2CppDumper] ========= START IL2CPP WORKER =========");
+
+        I2FAttachIl2cppIfNeeded();
+
+        BOOL shouldDump = [I2FConfigManager autoDumpEnabled] || ![I2FConfigManager hasDumpedOnce];
+        BOOL didDump = NO;
+
+        // 处理崩溃标记。
+        I2FHandlePreviousHookCrashMarker();
+
+        // 预装 hook（启动时）。
+        if ([I2FConfigManager autoInstallHookOnLaunch]) {
+            if (!I2FWaitIl2cppReady(50, 0.1)) {
+                NSLog(@"[I2CppDumper] Hook install skipped (IL2CPP not ready).");
+            } else {
+                NSLog(@"[I2CppDumper] Hook install start.");
+                I2FInstallSetTextHooksFromConfig();
+                NSLog(@"[I2CppDumper] Hook install end.");
+            }
+        }
+
+        // Dump（可选）。
+        if (shouldDump) {
+            didDump = I2FRunDumpSequence();
+        } else {
+            NSLog(@"[I2CppDumper] skip dump (already dumped and autoDump disabled).");
+        }
+
+        // Dump 完成后按需安装 hook（仅当本轮执行了 dump）。
+        if (didDump && [I2FConfigManager autoInstallHookAfterDump]) {
+            if (!I2FWaitIl2cppReady(50, 0.1)) {
+                NSLog(@"[I2CppDumper] After-dump hook install skipped (IL2CPP not ready).");
+            } else {
+                NSLog(@"[I2CppDumper] Hook install start.");
+                I2FInstallSetTextHooksFromConfig();
+                NSLog(@"[I2CppDumper] Hook install end.");
+            }
+        }
+
+        NSLog(@"[I2CppDumper] ========= END IL2CPP WORKER =========");
     });
 }

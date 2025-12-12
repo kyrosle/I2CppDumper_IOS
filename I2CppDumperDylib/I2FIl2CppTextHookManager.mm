@@ -187,17 +187,6 @@ static void I2FSetterPreHandler(void *address, DobbyRegisterContext *ctx) {
     }
 }
 
-+ (void)installHooksWithNames:(NSArray<NSString *> *)names {
-    NSMutableArray<NSDictionary *> *entries = [NSMutableArray arrayWithCapacity:names.count];
-    for (NSString *name in names) {
-        if (name.length == 0) {
-            continue;
-        }
-        [entries addObject:@{ @"name": name }];
-    }
-    [self installHooksWithEntries:entries];
-}
-
 + (void)installHooksWithEntries:(NSArray<NSDictionary *> *)entries {
     if (entries.count == 0) {
         return;
@@ -299,15 +288,6 @@ static void I2FSetterPreHandler(void *address, DobbyRegisterContext *ctx) {
         } else {
             NSLog(@"[I2FIl2CppTextHookManager] Unhook failed %@ @ %p, ret=%d", fullName, addr, ret);
         }
-    }
-}
-
-+ (BOOL)isHookInstalledWithName:(NSString *)name {
-    if (name.length == 0) {
-        return NO;
-    }
-    @synchronized (gNameToAddressMap) {
-        return gNameToAddressMap[name] != nil;
     }
 }
 

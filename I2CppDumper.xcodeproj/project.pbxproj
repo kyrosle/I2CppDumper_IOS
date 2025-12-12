@@ -120,6 +120,8 @@
 		6B93FC902EEAD370002A5936 /* UITableView+SDAutoTableViewCellHeight.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B93FC892EEAD370002A5936 /* UITableView+SDAutoTableViewCellHeight.h */; };
 		6B93FC912EEAD370002A5936 /* SDAutoLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B93FC882EEAD370002A5936 /* SDAutoLayout.h */; };
 		6B93FC922EEAD370002A5936 /* UIView+SDAutoLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B93FC8B2EEAD370002A5936 /* UIView+SDAutoLayout.h */; };
+		6B93FCC22EEBE20B002A5936 /* I2FSetTextExtractor.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B93FCC12EEBE20B002A5936 /* I2FSetTextExtractor.m */; };
+		6B93FCC32EEBE20B002A5936 /* I2FSetTextExtractor.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B93FCC02EEBE20B002A5936 /* I2FSetTextExtractor.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -268,6 +270,8 @@
 		6B93FC8A2EEAD370002A5936 /* UITableView+SDAutoTableViewCellHeight.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UITableView+SDAutoTableViewCellHeight.m"; sourceTree = "<group>"; };
 		6B93FC8B2EEAD370002A5936 /* UIView+SDAutoLayout.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIView+SDAutoLayout.h"; sourceTree = "<group>"; };
 		6B93FC8C2EEAD370002A5936 /* UIView+SDAutoLayout.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIView+SDAutoLayout.m"; sourceTree = "<group>"; };
+		6B93FCC02EEBE20B002A5936 /* I2FSetTextExtractor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = I2FSetTextExtractor.h; sourceTree = "<group>"; };
+		6B93FCC12EEBE20B002A5936 /* I2FSetTextExtractor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = I2FSetTextExtractor.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -362,6 +366,8 @@
 				6B93FC452EEA6D93002A5936 /* I2FFloatingBallManager.m */,
 				6B93FC462EEA6D93002A5936 /* I2FIl2CppTextHookManager.h */,
 				6B93FC472EEA6D93002A5936 /* I2FIl2CppTextHookManager.mm */,
+				6B93FCC02EEBE20B002A5936 /* I2FSetTextExtractor.h */,
+				6B93FCC12EEBE20B002A5936 /* I2FSetTextExtractor.m */,
 				6B93FC3A2EEA6D87002A5936 /* I2FTextLogManager.h */,
 				6B93FC3B2EEA6D87002A5936 /* I2FTextLogManager.m */,
 				6B5B497D2EE966C8001C9752 /* I2CppDumperDylib.h */,
@@ -618,6 +624,7 @@
 				6B5B4B422EE98428001C9752 /* mz_strm.h in Headers */,
 				6B5B4B432EE98428001C9752 /* SCLSwitchView.h in Headers */,
 				6B5B4B442EE98428001C9752 /* mz.h in Headers */,
+				6B93FCC32EEBE20B002A5936 /* I2FSetTextExtractor.h in Headers */,
 				6B5B4B452EE98428001C9752 /* mz_strm_wzaes.h in Headers */,
 				6B5B4B462EE98428001C9752 /* mz_zip.h in Headers */,
 				6B5B4B472EE98428001C9752 /* SSZipArchive.h in Headers */,
@@ -852,6 +859,7 @@
 				6B93FC8F2EEAD370002A5936 /* UITableView+SDAutoTableViewCellHeight.m in Sources */,
 				6B5B4B372EE98428001C9752 /* SCLTextView.m in Sources */,
 				6B5B4B382EE98428001C9752 /* SCLAlertViewStyleKit.m in Sources */,
+				6B93FCC22EEBE20B002A5936 /* I2FSetTextExtractor.m in Sources */,
 				6B5B4B682EE9849C001C9752 /* AlertUtils.mm in Sources */,
 				6B5B4B392EE98428001C9752 /* mz_os.c in Sources */,
 				6B5B4B3A2EE98428001C9752 /* mz_strm_wzaes.c in Sources */,

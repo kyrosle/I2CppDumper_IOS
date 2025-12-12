@@ -21,30 +21,6 @@ namespace Dumper {
     }  // namespace GenScript
 }  // namespace Dumper
 
-static void saveSetTextRvas(const std::string &dir) {
-    json arr = json::array();
-    std::unordered_set<std::string> seen;
-    for (const auto &entry : Dumper::SetText::entries) {
-        if (seen.find(entry.name) != seen.end()) {
-            continue;
-        }
-        seen.insert(entry.name);
-        std::stringstream ss;
-        ss << "0x" << std::hex << std::uppercase << entry.rva;
-        json obj = {{"name", entry.name}, {"rva", ss.str()}};
-        if (!entry.signature.empty()) {
-            obj["signature"] = entry.signature;
-        }
-        arr.push_back(obj);
-    }
-
-    File out(dir + "/set_text_rvas.json", "w");
-    if (!out.ok()) return;
-    std::string data = arr.dump(4);
-    out.write(data);
-    out.close();
-}
-
 void Dumper::init() {
     Dumper::domain = Variables::IL2CPP::il2cpp_domain_get();
 #if GENSCRIPT
@@ -197,7 +173,7 @@ Dumper::DumpStatus Dumper::dump(const std::string &dir, const std::string &heade
     GenScript::save();
     GenScript::scriptFile.close();
 #endif
-    saveSetTextRvas(dumpDir);
+    // Note: set_text_rvas.json generation moved to post-dump extractor.
     return Dumper::DumpStatus::SUCCESS;
 }
 
@@ -347,62 +323,6 @@ std::string Dumper::dumpMethod(void *klass) {
             outPut.seekp(-2, outPut.cur);
         }
         outPut << ") { }\n\n";
-
-        // 收集 set_text 的元信息，输出到 set_text_rvas.json。
-        if (methodPointer && (flags & METHOD_ATTRIBUTE_ABSTRACT) == 0) {
-            const char *methodNameC = Variables::IL2CPP::il2cpp_method_get_name(method);
-            if (methodNameC) {
-                std::string methodName = methodNameC;
-                std::string lowered = methodName;
-                std::transform(lowered.begin(), lowered.end(), lowered.begin(), ::tolower);
-                if (lowered == "set_text") {
-                    const char *classNamespace = Variables::IL2CPP::il2cpp_class_get_namespace(klass);
-                    std::string className = getClassName(klass);
-                    std::string fullName;
-                    if (classNamespace && strlen(classNamespace) > 0) {
-                        fullName = std::string(classNamespace) + "." + className + "." + methodName;
-                    } else {
-                        fullName = className + "." + methodName;
-                    }
-                    uint64_t rva = (uint64_t)methodPointer - Variables::info.address;
-                    // 构建签名字符串，参考 dump 输出。
-                    std::stringstream sig;
-                    sig << getMethodModifier(flags);
-                    auto return_type_sig = Variables::IL2CPP::il2cpp_method_get_return_type(method);
-                    auto return_class_sig = Variables::IL2CPP::il2cpp_class_from_type(return_type_sig);
-                    sig << getClassName(return_class_sig) << " " << methodName << "(";
-                    for (int i = 0; i < param_count; ++i) {
-                        auto param = Variables::IL2CPP::il2cpp_method_get_param(method, i);
-                        auto attrs = Variables::IL2CPP::il2cpp_type_get_attrs(param);
-                        if (Variables::IL2CPP::il2cpp_type_is_byref(param)) {
-                            if (attrs & PARAM_ATTRIBUTE_OUT && !(attrs & PARAM_ATTRIBUTE_IN)) {
-                                sig << "out ";
-                            } else if (attrs & PARAM_ATTRIBUTE_IN && !(attrs & PARAM_ATTRIBUTE_OUT)) {
-                                sig << "in ";
-                            } else {
-                                sig << "ref ";
-                            }
-                        } else {
-                            if (attrs & PARAM_ATTRIBUTE_IN) {
-                                sig << "[In] ";
-                            }
-                            if (attrs & PARAM_ATTRIBUTE_OUT) {
-                                sig << "[Out] ";
-                            }
-                        }
-                        auto parameter_class = Variables::IL2CPP::il2cpp_class_from_type(param);
-                        sig << getClassName(parameter_class) << " "
-                            << Variables::IL2CPP::il2cpp_method_get_param_name(method, i);
-                        sig << ", ";
-                    }
-                    if (param_count > 0) {
-                        sig.seekp(-2, sig.cur);
-                    }
-                    sig << ") { }";
-                    Dumper::SetText::entries.push_back({fullName, rva, sig.str()});
-                }
-            }
-        }
 
         // Add method to script
 #if GENSCRIPT

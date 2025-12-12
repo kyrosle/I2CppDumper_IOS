@@ -20,6 +20,8 @@
 // Il2Cpp dumper entry (ported from IOS-Il2CppDumper)
 void StartIl2CppDumpThread(void);
 
+static BOOL gI2FWorkerScheduled = NO;
+
 CHConstructor{
     printf(INSERT_SUCCESS_WELCOME);
 
@@ -40,8 +42,11 @@ CHConstructor{
                    || [I2FConfigManager autoInstallHookOnLaunch]
                    || [I2FConfigManager autoInstallHookAfterDump]
                    || hasEnabledHooks;
-    if (needThread) {
-        StartIl2CppDumpThread();
+    if (needThread && !gI2FWorkerScheduled) {
+        gI2FWorkerScheduled = YES;
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            StartIl2CppDumpThread();
+        });
     }
     
     [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationDidFinishLaunchingNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification * _Nonnull note) {
@@ -59,6 +64,12 @@ CHConstructor{
             NSLog(@"error: %@", error.localizedDescription);
         }
 #endif
+        if (needThread && !gI2FWorkerScheduled) {
+            gI2FWorkerScheduled = YES;
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                StartIl2CppDumpThread();
+            });
+        }
         
     }];
 }
