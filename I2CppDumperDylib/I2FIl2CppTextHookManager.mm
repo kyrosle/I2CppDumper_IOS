@@ -5,7 +5,6 @@
 #import "Core/Il2cpp.hpp"
 #import "I2FTextLogManager.h"
 #import "I2FConfigManager.h"
-#import "includes/Dobby/dobby.h"
 
 #include <string.h>
 
@@ -16,9 +15,15 @@ typedef struct {
     NSString *methodName;
 } I2FTargetSpec;
 
-static NSMutableDictionary<NSNumber *, NSString *> *gAddressToNameMap = nil;
-static NSMutableDictionary<NSString *, NSNumber *> *gNameToAddressMap = nil;
-static NSMutableArray<NSNumber *> *gInstalledAddresses = nil;
+typedef struct {
+    void *methodInfo;
+    void *methodPointer;
+} I2FResolvedMethod;
+
+static NSMutableDictionary<NSValue *, NSString *> *gMethodToNameMap = nil;              // methodInfo -> name
+static NSMutableDictionary<NSValue *, NSValue *> *gMethodToOriginalMap = nil;          // methodInfo -> original function ptr
+static NSMutableDictionary<NSString *, NSValue *> *gNameToMethodMap = nil;             // name -> methodInfo
+static NSMutableSet<NSString *> *gInstalledNames = nil;
 
 static NSString *I2FConvertIl2CppStringToNSString(void *il2cppString) {
     if (!il2cppString || !Variables::IL2CPP::il2cpp_string_chars) {
@@ -35,18 +40,6 @@ static NSString *I2FConvertIl2CppStringToNSString(void *il2cppString) {
         chars++;
     }
     return result;
-}
-
-static void *I2FGetSecondArgument(DobbyRegisterContext *ctx) {
-#if defined(__aarch64__)
-    return (void *)ctx->general.regs.x1;
-#elif defined(__arm__)
-    return (void *)ctx->general.regs.r1;
-#elif defined(__x86_64__)
-    return (void *)ctx->general.regs.rsi;
-#else
-    return NULL;
-#endif
 }
 
 static BOOL I2FParseTarget(NSString *fullName, I2FTargetSpec *outSpec) {
@@ -162,17 +155,94 @@ static void *I2FResolveMethodPointer(const I2FTargetSpec &spec) {
     return nullptr;
 }
 
-static void I2FSetterPreHandler(void *address, DobbyRegisterContext *ctx) {
-    @autoreleasepool {
-        NSString *nameString = nil;
-        @synchronized (gAddressToNameMap) {
-            nameString = gAddressToNameMap[@((unsigned long long)address)];
+static BOOL I2FResolveMethod(const I2FTargetSpec &spec, I2FResolvedMethod *outResolved) {
+    if (!outResolved) {
+        return NO;
+    }
+    if (!I2FApiReady()) {
+        return NO;
+    }
+
+    void *domain = Variables::IL2CPP::il2cpp_domain_get();
+    if (!domain) {
+        return NO;
+    }
+
+    size_t assemblyCount = 0;
+    void **assemblies = Variables::IL2CPP::il2cpp_domain_get_assemblies(domain, &assemblyCount);
+    if (!assemblies || assemblyCount == 0) {
+        return NO;
+    }
+
+    const char *ns = spec.namespaceName.length > 0 ? [spec.namespaceName UTF8String] : "";
+    const char *klass = [spec.className UTF8String];
+    const char *methodName = [spec.methodName UTF8String];
+
+    for (size_t i = 0; i < assemblyCount; i++) {
+        const void *image = Variables::IL2CPP::il2cpp_assembly_get_image(assemblies[i]);
+        if (!image) {
+            continue;
+        }
+        void *klassPtr = Variables::IL2CPP::il2cpp_class_from_name(image, ns, klass);
+        if (!klassPtr) {
+            continue;
         }
 
-        void *str = I2FGetSecondArgument(ctx);
-        NSString *text = I2FConvertIl2CppStringToNSString(str);
+        void *method = nullptr;
+        if (Variables::IL2CPP::il2cpp_class_get_method_from_name) {
+            method = Variables::IL2CPP::il2cpp_class_get_method_from_name(klassPtr, methodName, 1);
+            if (!method) {
+                method = Variables::IL2CPP::il2cpp_class_get_method_from_name(klassPtr, methodName, 0);
+            }
+        }
+        if (!method) {
+            if (!Variables::IL2CPP::il2cpp_class_get_methods || !Variables::IL2CPP::il2cpp_method_get_name) {
+                continue;
+            }
+            void *iter = nullptr;
+            while ((method = Variables::IL2CPP::il2cpp_class_get_methods(klassPtr, &iter))) {
+                const char *name = Variables::IL2CPP::il2cpp_method_get_name(method);
+                if (name && strcmp(name, methodName) == 0) {
+                    break;
+                }
+            }
+        }
+
+        if (method) {
+            void *methodPointer = *(void **)method;
+            if (methodPointer) {
+                outResolved->methodInfo = method;
+                outResolved->methodPointer = methodPointer;
+                return YES;
+            }
+        }
+    }
+    return NO;
+}
+
+typedef void (*I2FSetTextOriginalFunc)(void *self, void *il2cppString, const void *method);
+
+static void I2FSetterReplacement(void *self, void *il2cppString, const void *method) {
+    @autoreleasepool {
+        NSValue *key = [NSValue valueWithPointer:method];
+
+        NSString *nameString = nil;
+        NSValue *origPtrValue = nil;
+        @synchronized (gMethodToNameMap) {
+            nameString = gMethodToNameMap[key];
+        }
+        @synchronized (gMethodToOriginalMap) {
+            origPtrValue = gMethodToOriginalMap[key];
+        }
+
+        NSString *text = I2FConvertIl2CppStringToNSString(il2cppString);
         if (text.length > 0) {
             [[I2FTextLogManager sharedManager] appendText:text rvaString:(nameString ?: @"")];
+        }
+
+        I2FSetTextOriginalFunc orig = (I2FSetTextOriginalFunc)(origPtrValue.pointerValue);
+        if (orig) {
+            orig(self, il2cppString, method);
         }
     }
 }
@@ -181,9 +251,10 @@ static void I2FSetterPreHandler(void *address, DobbyRegisterContext *ctx) {
 
 + (void)initialize {
     if (self == [I2FIl2CppTextHookManager class]) {
-        gAddressToNameMap = [NSMutableDictionary dictionary];
-        gNameToAddressMap = [NSMutableDictionary dictionary];
-        gInstalledAddresses = [NSMutableArray array];
+        gMethodToNameMap = [NSMutableDictionary dictionary];
+        gMethodToOriginalMap = [NSMutableDictionary dictionary];
+        gNameToMethodMap = [NSMutableDictionary dictionary];
+        gInstalledNames = [NSMutableSet set];
     }
 }
 
@@ -220,42 +291,61 @@ static void I2FSetterPreHandler(void *address, DobbyRegisterContext *ctx) {
             continue;
         }
 
-        @synchronized (gNameToAddressMap) {
-            if (gNameToAddressMap[fullName] != nil) {
+        @synchronized (gNameToMethodMap) {
+            if (gNameToMethodMap[fullName] != nil) {
                 continue;
             }
         }
 
         [I2FConfigManager setLastInstallingHookEntry:entry];
 
-        void *methodPointer = I2FResolveMethodPointer(spec);
-        if (!methodPointer) {
+        I2FResolvedMethod resolved = {0};
+        if (!I2FResolveMethod(spec, &resolved)) {
             NSLog(@"[I2FIl2CppTextHookManager] resolve failed for %@", fullName);
             [I2FConfigManager setLastInstallingHookEntry:nil];
             continue;
         }
 
-        NSNumber *addrKey = @((unsigned long long)methodPointer);
-        @synchronized (gAddressToNameMap) {
-            if (gAddressToNameMap[addrKey]) {
-                gNameToAddressMap[fullName] = addrKey;
+        NSValue *methodKey = [NSValue valueWithPointer:resolved.methodInfo];
+        BOOL alreadyInstalled = NO;
+        @synchronized (gMethodToOriginalMap) {
+            alreadyInstalled = (gMethodToOriginalMap[methodKey] != nil);
+        }
+        if (alreadyInstalled) {
+            @synchronized (gNameToMethodMap) {
+                gNameToMethodMap[fullName] = methodKey;
+            }
+            [I2FConfigManager setLastInstallingHookEntry:nil];
+            continue;
+        }
+
+        void **methodPointerField = (void **)resolved.methodInfo; // MethodInfo 首字段即函数指针
+        void *expected = resolved.methodPointer;
+        BOOL swapped = __sync_bool_compare_and_swap(methodPointerField, expected, (void *)&I2FSetterReplacement);
+        if (!swapped) {
+            // 如果已经被替换成我们的函数，视为成功；否则失败。
+            if (*methodPointerField != (void *)&I2FSetterReplacement) {
+                NSLog(@"[I2FIl2CppTextHookManager] Hook failed %@, pointer write rejected", fullName);
+                [I2FConfigManager setLastInstallingHookEntry:nil];
                 continue;
             }
         }
 
-        int ret = DobbyInstrument(methodPointer, I2FSetterPreHandler);
-        if (ret == 0) {
-            NSLog(@"[I2FIl2CppTextHookManager] Hook success %@ @ %p", fullName, methodPointer);
-            @synchronized (gAddressToNameMap) {
-                gAddressToNameMap[addrKey] = fullName;
-                gNameToAddressMap[fullName] = addrKey;
-                [gInstalledAddresses addObject:addrKey];
-            }
-            [I2FConfigManager setLastInstallingHookEntry:nil];
-        } else {
-            NSLog(@"[I2FIl2CppTextHookManager] Hook failed %@, ret=%d", fullName, ret);
-            [I2FConfigManager setLastInstallingHookEntry:nil];
+        @synchronized (gMethodToOriginalMap) {
+            gMethodToOriginalMap[methodKey] = [NSValue valueWithPointer:expected];
         }
+        @synchronized (gMethodToNameMap) {
+            gMethodToNameMap[methodKey] = fullName;
+        }
+        @synchronized (gNameToMethodMap) {
+            gNameToMethodMap[fullName] = methodKey;
+        }
+        @synchronized (gInstalledNames) {
+            [gInstalledNames addObject:fullName];
+        }
+
+        NSLog(@"[I2FIl2CppTextHookManager] Hook success %@ @ %p -> %p", fullName, resolved.methodPointer, methodPointerField);
+        [I2FConfigManager setLastInstallingHookEntry:nil];
     }
 }
 
@@ -269,24 +359,40 @@ static void I2FSetterPreHandler(void *address, DobbyRegisterContext *ctx) {
         if (fullName.length == 0) {
             continue;
         }
-        NSNumber *addrKey = nil;
-        @synchronized (gNameToAddressMap) {
-            addrKey = gNameToAddressMap[fullName];
+        NSValue *methodKey = nil;
+        @synchronized (gNameToMethodMap) {
+            methodKey = gNameToMethodMap[fullName];
         }
-        if (!addrKey) {
+        if (!methodKey) {
             continue;
         }
-        void *addr = (void *)addrKey.unsignedLongLongValue;
-        int ret = DobbyDestroy(addr);
-        if (ret == 0) {
-            NSLog(@"[I2FIl2CppTextHookManager] Unhook success %@ @ %p", fullName, addr);
-            @synchronized (gAddressToNameMap) {
-                [gAddressToNameMap removeObjectForKey:addrKey];
-                [gNameToAddressMap removeObjectForKey:fullName];
-                [gInstalledAddresses removeObject:addrKey];
-            }
+        NSValue *origPtrValue = nil;
+        @synchronized (gMethodToOriginalMap) {
+            origPtrValue = gMethodToOriginalMap[methodKey];
+        }
+        if (!origPtrValue) {
+            continue;
+        }
+        void **methodPointerField = (void **)methodKey.pointerValue;
+        void *current = *methodPointerField;
+        if (current == (void *)&I2FSetterReplacement) {
+            *methodPointerField = origPtrValue.pointerValue;
+            NSLog(@"[I2FIl2CppTextHookManager] Unhook success %@ @ %p", fullName, methodPointerField);
         } else {
-            NSLog(@"[I2FIl2CppTextHookManager] Unhook failed %@ @ %p, ret=%d", fullName, addr, ret);
+            NSLog(@"[I2FIl2CppTextHookManager] Unhook skipped %@ (pointer already changed)", fullName);
+        }
+
+        @synchronized (gMethodToOriginalMap) {
+            [gMethodToOriginalMap removeObjectForKey:methodKey];
+        }
+        @synchronized (gMethodToNameMap) {
+            [gMethodToNameMap removeObjectForKey:methodKey];
+        }
+        @synchronized (gNameToMethodMap) {
+            [gNameToMethodMap removeObjectForKey:fullName];
+        }
+        @synchronized (gInstalledNames) {
+            [gInstalledNames removeObject:fullName];
         }
     }
 }
