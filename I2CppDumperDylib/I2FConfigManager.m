@@ -8,6 +8,20 @@ static NSString *const kI2FLastDumpDirectoryKey = @"I2F.LastDumpDirectory";
 static NSString *const kI2FSetTextHookEntriesKey = @"I2F.SetTextHookEntries";
 static NSString *const kI2FLastInstallingHookEntryKey = @"I2F.LastInstallingHookEntry";
 
+static NSString *I2FNormalizeOffsetValue(id value) {
+    if (!value) {
+        return nil;
+    }
+    if ([value isKindOfClass:[NSString class]]) {
+        NSString *trimmed = [(NSString *)value stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+        return trimmed.length > 0 ? trimmed : nil;
+    }
+    if ([value respondsToSelector:@selector(unsignedLongLongValue)]) {
+        return [NSString stringWithFormat:@"0x%llx", [value unsignedLongLongValue]];
+    }
+    return nil;
+}
+
 static NSArray<NSDictionary *> *I2FNormalizeHookEntries(NSArray<NSDictionary *> *entries) {
     if (entries.count == 0) {
         return @[];
@@ -49,6 +63,14 @@ static NSArray<NSDictionary *> *I2FNormalizeHookEntries(NSArray<NSDictionary *> 
         NSString *method = entry[@"method"];
         if (method.length > 0) {
             normalized[@"method"] = method;
+        }
+        NSString *slotOffset = I2FNormalizeOffsetValue(entry[@"slot_offset"] ?: entry[@"slotOffset"] ?: entry[@"set_text_new_offset"] ?: entry[@"new_offset"]);
+        if (slotOffset.length > 0) {
+            normalized[@"slot_offset"] = slotOffset;
+        }
+        NSString *origOffset = I2FNormalizeOffsetValue(entry[@"orig_offset"] ?: entry[@"origOffset"] ?: entry[@"set_text_orig_offset"] ?: entry[@"impl_offset"]);
+        if (origOffset.length > 0) {
+            normalized[@"orig_offset"] = origOffset;
         }
         normalized[@"enabled"] = @(enabled);
         [result addObject:normalized];

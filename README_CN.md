@@ -6,7 +6,7 @@ MonkeyDev 宿主 + 注入动态库，用于自动 dump Unity IL2CPP（默认二�
 
 ## 功能特点
 - 自动 dump：启动后等待 IL2CPP 就绪并延迟约 10 秒，生成 `<AppName>_UNITYDUMP` 文件夹和同名 zip，包含 `dump.cs`、`Assembly/` 头文件、`set_text_rvas.json`。
-- set_Text 收集：解析 dump.cs/JSON 生成 hook 列表，可在启动或 dump 完成后自动安装，截获文本写入内置日志。
+- set_Text 收集：解析 dump.cs/JSON 生成 hook 列表，按 `base + rva` 写入方法指针槽（无需提前算 MemberInfo 偏移）；缺少 RVA 时再回退名称解析，截获文本写入内置日志。
 - 控制面板：点击屏幕右侧 “I2F” 浮动球切换自动 dump/自动 hook/ dump 后自动 hook，可重新解析 dump、清空 hook 或日志，并查看当前 hook 与文本记录。
 - 崩溃防护：如果上次安装 hook 崩溃，会自动禁用对应条目并提示。
 - 调试辅助：调试构建下开启 Cycript（6666 端口）；附带 AntiAntiDebug、fishhook、MethodTrace 等工具代码。
@@ -40,7 +40,7 @@ MonkeyDev 宿主 + 注入动态库，用于自动 dump Unity IL2CPP（默认二�
 ## dump 与 hook 流程
 - 首次运行或开启自动 dump 时，线程会等待约 10 秒并确认 IL2CPP 域可用后开始 dump。
 - 结果保存在沙盒 `Documents/<AppName>_UNITYDUMP/`，并生成 `<AppName>_UNITYDUMP.zip`；`set_text_rvas.json` 存储匹配到的 set_Text RVA/签名，供后续自动安装。
-- 若启用自动安装 hook（默认开启），会在启动或 dump 后写入 NSUserDefaults 并安装；截获文本实时写入控制面板日志。
+- 若启用自动安装 hook（默认开启），会在启动或 dump 后写入 NSUserDefaults，并按 dump 中的 `base + rva` 直接覆盖方法指针槽安装；截获文本实时写入控制面板日志。特殊情况仍可提供 `slot_offset`/`orig_offset` 手工配置。
 - “重新解析 dump.cs” 会使用最新 dump 重新生成 hook 列表并尝试安装，便于更新。
 
 ## 验证与排错

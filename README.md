@@ -6,7 +6,7 @@ MonkeyDev host app plus an injected dylib that dumps Unity IL2CPP (`UnityFramewo
 
 ## Highlights
 - Automated dump: waits for IL2CPP to be ready and ~10s delay, then produces `<AppName>_UNITYDUMP` and a zip with `dump.cs`, `Assembly/` headers, and `set_text_rvas.json`.
-- `set_Text` harvesting: parses dump.cs/JSON to build hook entries, auto-installs on launch or after dump, and records intercepted strings into an in-app log.
+- `set_Text` harvesting: parses dump.cs/JSON to build hook entries, then installs by writing the method pointer slot at `base + rva` (no MemberInfo offsets needed). Falls back to name resolution if no RVA is present and records intercepted strings into an in-app log.
 - Control panel: tap the “I2F” floating ball to toggle auto dump/auto hook/post-dump hook, re-parse the latest dump, clear hooks or logs, and view hook list plus captured text.
 - Crash guard: if installing a hook caused a crash last time, the entry is auto-disabled on next launch.
 - Debug helpers: Cycript server on port 6666 in debug builds; includes AntiAntiDebug, fishhook, and MethodTrace utilities.
@@ -40,7 +40,7 @@ Run inside `I2CppDumper/Scripts`:
 ## Dump & Hook Flow
 - On first run or when auto dump is on, a worker waits ~10s and for the IL2CPP domain, then starts the dump.
 - Output lives in `Documents/<AppName>_UNITYDUMP/` plus `<AppName>_UNITYDUMP.zip`; `set_text_rvas.json` stores matched `set_Text` RVAs/signatures for later installs.
-- With auto install enabled (default), entries are saved to `NSUserDefaults` and hooked on launch or after dump; intercepted text streams into the panel log.
+- With auto install enabled (default), entries are saved to `NSUserDefaults` and hooked on launch or after dump by writing the function pointer slot at `base + rva` from the dump; intercepted text streams into the panel log. You can still provide manual `slot_offset`/`orig_offset` entries for special cases.
 - “Re-parse dump.cs” rebuilds the hook list from the latest dump and tries to install, useful after a fresh dump.
 
 ## Validation & Troubleshooting

@@ -459,9 +459,17 @@
         NSString *name = hook[@"name"];
         NSString *rva = hook[@"rva"] ?: @"";
         NSString *signature = hook[@"signature"];
+        NSString *slotOffset = hook[@"slot_offset"] ?: hook[@"slotOffset"] ?: @"";
+        NSString *origOffset = hook[@"orig_offset"] ?: hook[@"origOffset"] ?: @"";
         cell.textLabel.text = name.length > 0 ? name : @"(未命名)";
         if (signature.length > 0) {
             cell.detailTextLabel.text = signature;
+        } else if (slotOffset.length > 0) {
+            if (origOffset.length > 0) {
+                cell.detailTextLabel.text = [NSString stringWithFormat:@"slot %@ -> orig %@", slotOffset, origOffset];
+            } else {
+                cell.detailTextLabel.text = [NSString stringWithFormat:@"slot %@", slotOffset];
+            }
         } else if (rva.length > 0) {
             cell.detailTextLabel.text = [NSString stringWithFormat:@"RVA: %@", rva];
         } else {
