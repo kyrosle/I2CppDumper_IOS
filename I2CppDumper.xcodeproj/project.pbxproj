@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0FBB61A21FE04BD8912F9D19 /* I2FIl2CppSetTextInterceptor.h in Headers */ = {isa = PBXBuildFile; fileRef = D7E8972601234B99A02BE836 /* I2FIl2CppSetTextInterceptor.h */; };
+		6B0D32E22EF24A0A00A1D111 /* I2FIl2CppTextHookTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B0D32E02EF24A0A00A1D111 /* I2FIl2CppTextHookTypes.m */; };
 		6B5B493A2EE966C8001C9752 /* libI2CppDumperDylib.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = 6B5B49392EE966C8001C9752 /* libI2CppDumperDylib.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		6B5B493F2EE966C8001C9752 /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B5B493E2EE966C8001C9752 /* JavaScriptCore.framework */; };
 		6B5B49432EE966C8001C9752 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B5B49422EE966C8001C9752 /* UIKit.framework */; };
@@ -296,6 +298,14 @@
 		6BB234792EEFED74005C5BB1 /* mz_strm_buf.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BB234422EEFED74005C5BB1 /* mz_strm_buf.h */; };
 		6BB2347A2EEFED74005C5BB1 /* mz_strm_os.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BB234462EEFED74005C5BB1 /* mz_strm_os.h */; };
 		6BB2347B2EEFED74005C5BB1 /* ZipArchive.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BB234352EEFED74005C5BB1 /* ZipArchive.h */; };
+		6BD3F4A92EF2484B00851948 /* I2FIl2CppTextHookTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BD3F4A82EF2484B00851948 /* I2FIl2CppTextHookTypes.h */; };
+		6BD3F4AB2EF2485D00851948 /* I2FIl2CppTextHookState.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BD3F4AA2EF2485D00851948 /* I2FIl2CppTextHookState.h */; };
+		6BD3F4AE2EF2486D00851948 /* I2FIl2CppHookRuntime.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6BD3F4AD2EF2486D00851948 /* I2FIl2CppHookRuntime.mm */; };
+		6BD3F4AF2EF2486D00851948 /* I2FIl2CppHookRuntime.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BD3F4AC2EF2486D00851948 /* I2FIl2CppHookRuntime.h */; };
+		6BD3F4B12EF2488800851948 /* I2FIl2CppTextHookState.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6BD3F4B02EF2488800851948 /* I2FIl2CppTextHookState.mm */; };
+		97E255701A29405D96C51E2D /* I2FTransFontPatcher.h in Headers */ = {isa = PBXBuildFile; fileRef = E97989DC06474143AE192B9F /* I2FTransFontPatcher.h */; };
+		E4B05A69E7A340FD9F07B351 /* I2FIl2CppSetTextInterceptor.mm in Sources */ = {isa = PBXBuildFile; fileRef = 844CB36EA7C14544AB176CAD /* I2FIl2CppSetTextInterceptor.mm */; };
+		E617D833DA5642DBA60A0FAB /* I2FTransFontPatcher.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6A3C2AF2D95B4BB6800B77FD /* I2FTransFontPatcher.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -323,6 +333,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		6A3C2AF2D95B4BB6800B77FD /* I2FTransFontPatcher.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = I2FTransFontPatcher.mm; sourceTree = "<group>"; };
+		6B0D32E02EF24A0A00A1D111 /* I2FIl2CppTextHookTypes.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = I2FIl2CppTextHookTypes.m; sourceTree = "<group>"; };
 		6B5B49282EE966C8001C9752 /* I2CppDumper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = I2CppDumper.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6B5B49392EE966C8001C9752 /* libI2CppDumperDylib.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libI2CppDumperDylib.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		6B5B493E2EE966C8001C9752 /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
@@ -629,6 +641,14 @@
 		6BB234572EEFED74005C5BB1 /* SSZipArchive.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SSZipArchive.h; sourceTree = "<group>"; };
 		6BB234582EEFED74005C5BB1 /* SSZipArchive.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SSZipArchive.m; sourceTree = "<group>"; };
 		6BB234592EEFED74005C5BB1 /* SSZipCommon.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SSZipCommon.h; sourceTree = "<group>"; };
+		6BD3F4A82EF2484B00851948 /* I2FIl2CppTextHookTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = I2FIl2CppTextHookTypes.h; sourceTree = "<group>"; };
+		6BD3F4AA2EF2485D00851948 /* I2FIl2CppTextHookState.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = I2FIl2CppTextHookState.h; sourceTree = "<group>"; };
+		6BD3F4AC2EF2486D00851948 /* I2FIl2CppHookRuntime.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = I2FIl2CppHookRuntime.h; sourceTree = "<group>"; };
+		6BD3F4AD2EF2486D00851948 /* I2FIl2CppHookRuntime.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = I2FIl2CppHookRuntime.mm; sourceTree = "<group>"; };
+		6BD3F4B02EF2488800851948 /* I2FIl2CppTextHookState.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = I2FIl2CppTextHookState.mm; sourceTree = "<group>"; };
+		844CB36EA7C14544AB176CAD /* I2FIl2CppSetTextInterceptor.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = I2FIl2CppSetTextInterceptor.mm; sourceTree = "<group>"; };
+		D7E8972601234B99A02BE836 /* I2FIl2CppSetTextInterceptor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = I2FIl2CppSetTextInterceptor.h; sourceTree = "<group>"; };
+		E97989DC06474143AE192B9F /* I2FTransFontPatcher.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = I2FTransFontPatcher.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -716,29 +736,12 @@
 			children = (
 				6B5B4B252EE98428001C9752 /* includes */,
 				6B5B4AE12EE9841D001C9752 /* Core */,
-				6B5B4B662EE9849C001C9752 /* AlertUtils.h */,
-				6B5B4B672EE9849C001C9752 /* AlertUtils.mm */,
+				6BD3F59D2EF24DDB00851948 /* Utils */,
+				6BD3F59E2EF24DE900851948 /* Features */,
 				6B93FC3E2EEA6D93002A5936 /* I2FConfigManager.h */,
 				6B93FC3F2EEA6D93002A5936 /* I2FConfigManager.m */,
-				6B93FC402EEA6D93002A5936 /* I2FControlPanelViewController.h */,
-				6B93FC412EEA6D93002A5936 /* I2FControlPanelViewController.m */,
-				6B93FC422EEA6D93002A5936 /* I2FDumpRvaParser.h */,
-				6B93FC432EEA6D93002A5936 /* I2FDumpRvaParser.m */,
-				6B93FC442EEA6D93002A5936 /* I2FFloatingBallManager.h */,
-				6B93FC452EEA6D93002A5936 /* I2FFloatingBallManager.m */,
-				6B93FC462EEA6D93002A5936 /* I2FIl2CppTextHookManager.h */,
-				6B93FC472EEA6D93002A5936 /* I2FIl2CppTextHookManager.mm */,
-				6B93FCC02EEBE20B002A5936 /* I2FSetTextExtractor.h */,
-				6B93FCC12EEBE20B002A5936 /* I2FSetTextExtractor.m */,
-				6B93FC3A2EEA6D87002A5936 /* I2FTextLogManager.h */,
-				6B93FC3B2EEA6D87002A5936 /* I2FTextLogManager.m */,
-				6BB231882EEFB2ED005C5BB1 /* I2FTranslationManager.h */,
-				6BB231892EEFB2ED005C5BB1 /* I2FTranslationManager.m */,
-				6BB2319A2EFBCD18005C5BB1 /* I2FGGTranslationClient.h */,
-				6BB2319B2EFBCD18005C5BB1 /* I2FGGTranslationClient.m */,
 				6B5B497D2EE966C8001C9752 /* I2CppDumperDylib.h */,
 				6B5B497F2EE966C8001C9752 /* I2CppDumperDylib.m */,
-				6B5B4B5C2EE98438001C9752 /* Il2CppDumpEntry.mm */,
 				6B5B49452EE966C8001C9752 /* Logos */,
 				6B5B49492EE966C8001C9752 /* Config */,
 				6B5B49562EE966C8001C9752 /* Trace */,
@@ -829,13 +832,18 @@
 		6B5B4AE12EE9841D001C9752 /* Core */ = {
 			isa = PBXGroup;
 			children = (
-				6B5B4ADA2EE9841D001C9752 /* config.h */,
-				6B5B4ADB2EE9841D001C9752 /* Dumper.hpp */,
-				6B5B4ADC2EE9841D001C9752 /* Dumper.cpp */,
-				6B5B4ADD2EE9841D001C9752 /* Il2cpp.hpp */,
-				6B5B4ADE2EE9841D001C9752 /* Il2cpp.cpp */,
-				6B5B4ADF2EE9841D001C9752 /* il2cpp-tabledefs.h */,
-				6B5B4AE02EE9841D001C9752 /* Util.hpp */,
+				6BD3F4AC2EF2486D00851948 /* I2FIl2CppHookRuntime.h */,
+				6BD3F4AD2EF2486D00851948 /* I2FIl2CppHookRuntime.mm */,
+				6BD3F4A82EF2484B00851948 /* I2FIl2CppTextHookTypes.h */,
+				6B0D32E02EF24A0A00A1D111 /* I2FIl2CppTextHookTypes.m */,
+				6BD3F4AA2EF2485D00851948 /* I2FIl2CppTextHookState.h */,
+				6BD3F4B02EF2488800851948 /* I2FIl2CppTextHookState.mm */,
+				D7E8972601234B99A02BE836 /* I2FIl2CppSetTextInterceptor.h */,
+				844CB36EA7C14544AB176CAD /* I2FIl2CppSetTextInterceptor.mm */,
+				6B93FC462EEA6D93002A5936 /* I2FIl2CppTextHookManager.h */,
+				6B93FC472EEA6D93002A5936 /* I2FIl2CppTextHookManager.mm */,
+				E97989DC06474143AE192B9F /* I2FTransFontPatcher.h */,
+				6A3C2AF2D95B4BB6800B77FD /* I2FTransFontPatcher.mm */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -877,6 +885,7 @@
 		6B5B4B252EE98428001C9752 /* includes */ = {
 			isa = PBXGroup;
 			children = (
+				6BD3F59C2EF24D9000851948 /* Il2CppDumper */,
 				6BB2314A2EEFB26E005C5BB1 /* GGTranslation */,
 				6B93FC542EEA74F1002A5936 /* Dobby */,
 				6B93FC352EEA68DF002A5936 /* MISFloatingBall */,
@@ -1530,6 +1539,75 @@
 			path = SSZipArchive;
 			sourceTree = "<group>";
 		};
+		6BD3F59C2EF24D9000851948 /* Il2CppDumper */ = {
+			isa = PBXGroup;
+			children = (
+				6B5B4ADA2EE9841D001C9752 /* config.h */,
+				6B5B4ADB2EE9841D001C9752 /* Dumper.hpp */,
+				6B5B4ADC2EE9841D001C9752 /* Dumper.cpp */,
+				6B5B4ADD2EE9841D001C9752 /* Il2cpp.hpp */,
+				6B5B4ADE2EE9841D001C9752 /* Il2cpp.cpp */,
+				6B5B4ADF2EE9841D001C9752 /* il2cpp-tabledefs.h */,
+				6B5B4AE02EE9841D001C9752 /* Util.hpp */,
+			);
+			path = Il2CppDumper;
+			sourceTree = "<group>";
+		};
+		6BD3F59D2EF24DDB00851948 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				6B5B4B662EE9849C001C9752 /* AlertUtils.h */,
+				6B5B4B672EE9849C001C9752 /* AlertUtils.mm */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		6BD3F59E2EF24DE900851948 /* Features */ = {
+			isa = PBXGroup;
+			children = (
+				6BD3F59F2EF24DF500851948 /* Dump */,
+				6BD3F5A02EF24DFE00851948 /* Translation */,
+				6BD3F5A12EF24E0800851948 /* UI */,
+			);
+			path = Features;
+			sourceTree = "<group>";
+		};
+		6BD3F59F2EF24DF500851948 /* Dump */ = {
+			isa = PBXGroup;
+			children = (
+				6B93FC422EEA6D93002A5936 /* I2FDumpRvaParser.h */,
+				6B93FC432EEA6D93002A5936 /* I2FDumpRvaParser.m */,
+				6B93FCC02EEBE20B002A5936 /* I2FSetTextExtractor.h */,
+				6B93FCC12EEBE20B002A5936 /* I2FSetTextExtractor.m */,
+				6B5B4B5C2EE98438001C9752 /* Il2CppDumpEntry.mm */,
+			);
+			path = Dump;
+			sourceTree = "<group>";
+		};
+		6BD3F5A02EF24DFE00851948 /* Translation */ = {
+			isa = PBXGroup;
+			children = (
+				6BB231882EEFB2ED005C5BB1 /* I2FTranslationManager.h */,
+				6BB231892EEFB2ED005C5BB1 /* I2FTranslationManager.m */,
+				6BB2319A2EFBCD18005C5BB1 /* I2FGGTranslationClient.h */,
+				6BB2319B2EFBCD18005C5BB1 /* I2FGGTranslationClient.m */,
+				6B93FC3A2EEA6D87002A5936 /* I2FTextLogManager.h */,
+				6B93FC3B2EEA6D87002A5936 /* I2FTextLogManager.m */,
+			);
+			path = Translation;
+			sourceTree = "<group>";
+		};
+		6BD3F5A12EF24E0800851948 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				6B93FC402EEA6D93002A5936 /* I2FControlPanelViewController.h */,
+				6B93FC412EEA6D93002A5936 /* I2FControlPanelViewController.m */,
+				6B93FC442EEA6D93002A5936 /* I2FFloatingBallManager.h */,
+				6B93FC452EEA6D93002A5936 /* I2FFloatingBallManager.m */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -1565,6 +1643,7 @@
 				6BB2347A2EEFED74005C5BB1 /* mz_strm_os.h in Headers */,
 				6BB2347B2EEFED74005C5BB1 /* ZipArchive.h in Headers */,
 				6B5B4B432EE98428001C9752 /* SCLSwitchView.h in Headers */,
+				6BD3F4A92EF2484B00851948 /* I2FIl2CppTextHookTypes.h in Headers */,
 				6BB232422EEFB826005C5BB1 /* GDTCCTUploader.h in Headers */,
 				6BB232432EEFB826005C5BB1 /* GDTCORReachability.h in Headers */,
 				6BB232442EEFB826005C5BB1 /* GDTCOREndpoints_Private.h in Headers */,
@@ -1584,6 +1663,7 @@
 				6BB233562EEFB8FA005C5BB1 /* FBLPromise+All.h in Headers */,
 				6BB233572EEFB8FA005C5BB1 /* FBLPromise+Do.h in Headers */,
 				6BB233582EEFB8FA005C5BB1 /* FBLPromise+Race.h in Headers */,
+				6BD3F4AF2EF2486D00851948 /* I2FIl2CppHookRuntime.h in Headers */,
 				6BB233592EEFB8FA005C5BB1 /* FBLPromise+Any.h in Headers */,
 				6BB2335A2EEFB8FA005C5BB1 /* FBLPromise+Validate.h in Headers */,
 				6BB2335B2EEFB8FA005C5BB1 /* FBLPromise+Catch.h in Headers */,
@@ -1604,6 +1684,9 @@
 				6BB232502EEFB826005C5BB1 /* compliance.nanopb.h in Headers */,
 				6BB232512EEFB826005C5BB1 /* GDTCOREndpoints.h in Headers */,
 				6BB232522EEFB826005C5BB1 /* GDTCORConsoleLogger.h in Headers */,
+				6BD3F4AB2EF2485D00851948 /* I2FIl2CppTextHookState.h in Headers */,
+				97E255701A29405D96C51E2D /* I2FTransFontPatcher.h in Headers */,
+				0FBB61A21FE04BD8912F9D19 /* I2FIl2CppSetTextInterceptor.h in Headers */,
 				6BB232532EEFB826005C5BB1 /* GDTCORMetrics+GDTCCTSupport.h in Headers */,
 				6BB232542EEFB826005C5BB1 /* GDTCOREventTransformer.h in Headers */,
 				6BB232552EEFB826005C5BB1 /* client_metrics.nanopb.h in Headers */,
@@ -1858,6 +1941,7 @@
 				6B5B495A2EE966C8001C9752 /* a1a2-selectortramps-arm64.s in Sources */,
 				6BB232F12EEFB8A1005C5BB1 /* GTMSessionFetcherLogging.m in Sources */,
 				6BB232F22EEFB8A1005C5BB1 /* GTMSessionUploadFetcher.m in Sources */,
+				6BD3F4AE2EF2486D00851948 /* I2FIl2CppHookRuntime.mm in Sources */,
 				6BB232F32EEFB8A1005C5BB1 /* GTMSessionFetcher.m in Sources */,
 				6BB232F42EEFB8A1005C5BB1 /* GTMSessionFetcherService.m in Sources */,
 				6BB2345B2EEFED74005C5BB1 /* mz_strm_mem.c in Sources */,
@@ -1888,6 +1972,9 @@
 				6B93FC492EEA6D93002A5936 /* I2FControlPanelViewController.m in Sources */,
 				6B93FC4A2EEA6D93002A5936 /* I2FFloatingBallManager.m in Sources */,
 				6B93FC4B2EEA6D93002A5936 /* I2FIl2CppTextHookManager.mm in Sources */,
+				6B0D32E22EF24A0A00A1D111 /* I2FIl2CppTextHookTypes.m in Sources */,
+				E617D833DA5642DBA60A0FAB /* I2FTransFontPatcher.mm in Sources */,
+				E4B05A69E7A340FD9F07B351 /* I2FIl2CppSetTextInterceptor.mm in Sources */,
 				6B93FC4C2EEA6D93002A5936 /* I2FDumpRvaParser.m in Sources */,
 				6B5B4B342EE98428001C9752 /* UIImage+ImageEffects.m in Sources */,
 				6B5B4B362EE98428001C9752 /* SCLSwitchView.m in Sources */,
@@ -1910,6 +1997,7 @@
 				6BB233EF2EEFBC88005C5BB1 /* pb_decode.c in Sources */,
 				6B5B4AE32EE9841D001C9752 /* Dumper.cpp in Sources */,
 				6B5B497A2EE966C8001C9752 /* fishhook.c in Sources */,
+				6BD3F4B12EF2488800851948 /* I2FIl2CppTextHookState.mm in Sources */,
 				6B5B49772EE966C8001C9752 /* AntiAntiDebug.m in Sources */,
 				6B5B496C2EE966C8001C9752 /* OCSelectorTrampolines.mm in Sources */,
 				6B93FC382EEA68FF002A5936 /* MISFloatingBall.m in Sources */,

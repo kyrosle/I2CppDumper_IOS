@@ -4,7 +4,7 @@
 #import "I2FDumpRvaParser.h"
 #import "I2FTextLogManager.h"
 #import "I2FIl2CppTextHookManager.h"
-#import "includes/SDAutoLayout/SDAutoLayout.h"
+#import "SDAutoLayout.h"
 
 @interface I2FControlPanelViewController () <UITableViewDataSource, UITableViewDelegate>
 

@@ -6,7 +6,7 @@ MonkeyDev host app plus an injected dylib that dumps Unity IL2CPP (`UnityFramewo
 
 ## Highlights
 - Automated dump: waits for IL2CPP to be ready and ~10s delay, then produces `<AppName>_UNITYDUMP` and a zip with `dump.cs`, `Assembly/` headers, and `set_text_rvas.json`.
-- `set_Text` harvesting: parses dump.cs/JSON to build hook entries, then installs by writing the method pointer slot at `base + rva` (no MemberInfo offsets needed). Falls back to name resolution if no RVA is present and records intercepted strings into an in-app log.
+- `set_Text` / `set_htmlText` harvesting: parses dump.cs/JSON to build hook entries, then installs by writing the method pointer slot at `base + rva` (no MemberInfo offsets needed). Falls back to name resolution if no RVA is present and records intercepted strings into an in-app log.
 - Control panel: tap the “I2F” floating ball to toggle auto dump/auto hook/post-dump hook, re-parse the latest dump, clear hooks or logs, and view hook list plus captured text.
 - Crash guard: if installing a hook caused a crash last time, the entry is auto-disabled on next launch.
 - Debug helpers: Cycript server on port 6666 in debug builds; includes AntiAntiDebug, fishhook, and MethodTrace utilities.

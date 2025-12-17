@@ -104,7 +104,7 @@ static NSArray<NSDictionary *> *I2FFilterEntries(NSArray<NSDictionary *> *entrie
     return filtered;
 }
 
-// 解析 dump.cs：提取当前 namespace/class，并匹配 set_text 方法行，抓取前一行 RVA。
+// 解析 dump.cs：提取当前 namespace/class，并匹配 set_text/set_htmlText 方法行，抓取前一行 RVA。
 static NSArray<NSDictionary *> *I2FParseSetTextFromDumpCS(NSString *dumpDirectory) {
     NSString *dumpPath = [dumpDirectory stringByAppendingPathComponent:@"dump.cs"];
     NSData *data = [NSData dataWithContentsOfFile:dumpPath];
@@ -119,7 +119,7 @@ static NSArray<NSDictionary *> *I2FParseSetTextFromDumpCS(NSString *dumpDirector
     NSRegularExpression *nsRegex = [NSRegularExpression regularExpressionWithPattern:@"//\\s*Namespace:\\s*(.+)" options:0 error:nil];
     NSRegularExpression *classRegex = [NSRegularExpression regularExpressionWithPattern:@"\\b(class|struct|interface|enum)\\s+([A-Za-z0-9_`]+)" options:0 error:nil];
     NSRegularExpression *rvaRegex = [NSRegularExpression regularExpressionWithPattern:@"RVA:\\s*(0x[0-9a-fA-F]+|\\d+)" options:NSRegularExpressionCaseInsensitive error:nil];
-    NSRegularExpression *methodRegex = [NSRegularExpression regularExpressionWithPattern:@"^\\s*public\\b(?!.*\\bvirtual\\b).*?\\bVoid\\s+(set_text|set_Text)\\s*\\(\\s*(?<!\\.)String\\s+\\w+\\s*\\)\\s*\\{?" options:NSRegularExpressionCaseInsensitive error:nil];
+    NSRegularExpression *methodRegex = [NSRegularExpression regularExpressionWithPattern:@"^\\s*public\\b(?!.*\\bvirtual\\b).*?\\bVoid\\s+(set_text|set_Text|set_htmlText|set_HtmlText)\\s*\\(\\s*(?<!\\.)String\\s+\\w+\\s*\\)\\s*\\{?" options:NSRegularExpressionCaseInsensitive error:nil];
 
     NSMutableOrderedSet<NSDictionary *> *results = [NSMutableOrderedSet orderedSet];
     NSArray<NSString *> *lines = [content componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];

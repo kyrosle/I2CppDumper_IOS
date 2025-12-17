@@ -2,7 +2,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import "includes/MISFloatingBall/MISFloatingBall.h"
+#import "MISFloatingBall.h"
 #import "I2FControlPanelViewController.h"
 
 @interface I2FFloatingBallManager ()

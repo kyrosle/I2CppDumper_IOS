@@ -5,12 +5,12 @@
 
 #import <Foundation/Foundation.h>
 
-#import "includes/SSZipArchive/SSZipArchive.h"
+#import "SSZipArchive.h"
 #import "AlertUtils.h"
 
-#include "Core/config.h"
-#include "Core/Il2cpp.hpp"
-#include "Core/Dumper.hpp"
+#include "config.h"
+#include "Il2cpp.hpp"
+#include "Dumper.hpp"
 
 #import "I2FConfigManager.h"
 #import "I2FDumpRvaParser.h"
